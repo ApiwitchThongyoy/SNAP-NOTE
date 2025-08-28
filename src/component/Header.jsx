@@ -1,6 +1,6 @@
 function Header(){
     return(
-        <h2>LOGIN</h2>
+        <h2>Sign in</h2>
     )
 }
 
