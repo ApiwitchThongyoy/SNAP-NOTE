@@ -29,8 +29,6 @@ function LoginDetail() {
     fontSize:"20px"
   };
 
-  
-
   return (
     <div>
       <img src={Logo_Login} alt="logo" />

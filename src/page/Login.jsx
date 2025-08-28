@@ -1,4 +1,3 @@
-import Header from "../component/Header";
 import LoginDetail from "../component/LoginDetail"
 
 function Login(){
