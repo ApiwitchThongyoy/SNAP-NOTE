@@ -24,7 +24,7 @@ function LoginDetail() {
 
   const linkStyle = {
     display: "flex",
-    gap: "35px",
+    gap: "40px",
     marginBottom: "10px",
     fontSize:"20px"
   };
