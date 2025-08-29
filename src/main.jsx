@@ -5,6 +5,7 @@ import { createBrowserRouter,RouterProvider,Route,Link } from 'react-router-dom'
 import Login from './page/Login.jsx'
 import Resetpassword from './page/Resetpassword.jsx'
 import SignUp from './page/SignUp.jsx'
+import Mainpage from './page/mainpage.jsx'
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -13,12 +14,16 @@ const router = createBrowserRouter([
     element:<Login />
   },
   {
-    path:"SignUp",
+    path:"Sign Up",
     element:<SignUp />
   },
   {
     path:"Resetpassword",
     element:<Resetpassword />
+  },
+  {
+    path:"Mainpage",
+    element:<Mainpage />
   },
 ])
 
