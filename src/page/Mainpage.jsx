@@ -1,4 +1,4 @@
-import Main_Detail from "../component/mainDetail"
+import Main_Detail from "../component/Main/mainDetail"
 
 function mainpage(){
     return(

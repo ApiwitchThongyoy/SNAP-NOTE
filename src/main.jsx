@@ -5,8 +5,8 @@ import { createBrowserRouter,RouterProvider,Route,Link } from 'react-router-dom'
 import Login from './page/Login.jsx'
 import Resetpassword from './page/Resetpassword.jsx'
 import SignUp from './page/SignUp.jsx'
-import Mainpage from './page/mainpage.jsx'
-import "./index.css";
+import Mainpage from './page/Mainpage.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -14,15 +14,15 @@ const router = createBrowserRouter([
     element:<Login />
   },
   {
-    path:"Sign Up",
+    path:"sign-up",
     element:<SignUp />
   },
   {
-    path:"Resetpassword",
+    path:"reset-password",
     element:<Resetpassword />
   },
   {
-    path:"Mainpage",
+    path:"main-page",
     element:<Mainpage />
   },
 ])

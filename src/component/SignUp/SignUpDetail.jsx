@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Logo_Login from "../assets/Logo_Login.svg";
-import "../component/SignUpDetail.css";
+import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 
 function SignUpDetail() {
@@ -27,14 +26,14 @@ function SignUpDetail() {
 
   return (
     <div>
-      <div className="back-button-container">
-        <button className="back-button">
+      <div>
+        <button>
           <BsArrowLeftCircleFill />
         </button>
       </div>
 
       <img src={Logo_Login} alt="logo" />
-      <div className="container">
+      <div>
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
           <div>

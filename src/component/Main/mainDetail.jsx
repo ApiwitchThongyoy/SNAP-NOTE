@@ -1,12 +1,9 @@
-import "../component/mainDetail.css";
 import { BsBell } from "react-icons/bs";
 import { BsPersonCircle } from "react-icons/bs";
 
 function Main_Detail() {
   return (
     <div className="layout">
-
-      
       <div className="icon-group">
         <BsBell size={30} />
         <BsPersonCircle size={35} />
@@ -17,7 +14,7 @@ function Main_Detail() {
       </div>
 
   
-      <div className="container">
+      <div className="main-container">
         <button className="menu-item">หน้าหลัก</button>
         <button className="menu-item">โพสต์</button>
         <button className="menu-item">บันทึก</button>

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Logo_Login from "../assets/Logo_Login.svg";
-import "../component/Login.css";
+import Logo_Login from "../../assets/Logo_Login.svg";
 
 function LoginDetail() {
   const [email, setEmail] = useState("");
@@ -22,17 +21,10 @@ function LoginDetail() {
     setPassword("");
   }
 
-  const linkStyle = {
-    display: "flex",
-    gap: "40px",
-    marginBottom: "10px",
-    fontSize:"20px"
-  };
-
   return (
-    <div>
+    <div class="min-h-screen flex items-center justify-center bg-[#56A750]">
       <img src={Logo_Login} alt="logo" />
-      <div className="container">
+      <div>
         <h1>Sign in</h1>
         <form onSubmit={handleSubmit}>
           <div>
@@ -59,7 +51,7 @@ function LoginDetail() {
             />
           </div>
 
-          <div style={linkStyle}>
+          <div>
             <span>sign up?</span>
             <span>Forget Password?</span>
           </div>

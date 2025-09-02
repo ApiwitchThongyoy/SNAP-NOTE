@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Logo_Login from "../assets/Logo_Login.svg";
-import "../component/Resetpassword.css";
+import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 
 function ResetPassword() {
@@ -46,14 +45,14 @@ function ResetPassword() {
 
   return (
     <div>
-      <div className="back-button-container">
-        <button className="back-button">
+      <div>
+        <button>
           <BsArrowLeftCircleFill />
         </button>
       </div>
 
       <img src={Logo_Login} alt="logo" />
-      <div className="container">
+      <div>
         <h1>Reset Password</h1>
         <form onSubmit={handleSubmit}>
           <div>
@@ -67,7 +66,6 @@ function ResetPassword() {
             />
           </div>
 
-          {/* ปุ่มขอ OTP */}
           <div>
             <button
               type="button"
@@ -82,7 +80,6 @@ function ResetPassword() {
                 cursor: "pointer"
               }}
             >
-              ขอ OTP
             </button>
           </div>
 

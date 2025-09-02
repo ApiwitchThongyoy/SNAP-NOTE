@@ -1,4 +1,4 @@
-import ResetDetail from "../component/ResetDetail"
+import ResetDetail from "../component/Resetpassword/ResetDetail"
 
 function Resetpassword() {
     return(
