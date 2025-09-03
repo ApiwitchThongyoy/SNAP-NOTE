@@ -44,7 +44,7 @@ function ResetPassword() {
   }
 
   return (
-    <div>
+    <div class = "flex justify-center items-center w-screen min-h-screen  bg-[#56A750]">
       <div>
         <button>
           <BsArrowLeftCircleFill />
@@ -69,16 +69,7 @@ function ResetPassword() {
           <div>
             <button
               type="button"
-              onClick={handleRequestOtp}
-              style={{
-                margin: "10px 0",
-                padding: "10px",
-                borderRadius: "10px",
-                backgroundColor: "#164C11",
-                color: "#FFF0F0",
-                fontWeight: "bold",
-                cursor: "pointer"
-              }}
+              onClick={handleRequestOtp} 
             >
             </button>
           </div>
