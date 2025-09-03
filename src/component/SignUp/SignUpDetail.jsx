@@ -67,24 +67,24 @@ function SignUpDetail() {
   }
 
   return (
-    <div className="relative flex min-h-screen bg-[#56A750]">
+    <div class="relative flex min-h-screen bg-[#56A750]">
       <div>
-        <button className="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50">
+        <button class="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50">
           <BsArrowLeftCircleFill />
         </button>
       </div>
 
-      <div className="absolute left-0 top-0 h-full">
+      <div class="absolute left-0 top-0 h-full">
         <img
           src={Logo_Login}
           alt="left-side"
-          className="w-full h-full object-cover"
+          class="w-full h-full object-cover"
         />
       </div>
 
-      <div className="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
-        <h1 className="text-3xl font-bold mb-6 text-start text-xxl text-[#164C11]">Sign Up</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col">
+      <div class="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
+        <h1 class="text-3xl font-bold mb-6 text-start text-xxl text-[#164C11]">Sign Up</h1>
+        <form onSubmit={handleSubmit} class="flex flex-col">
           <div>
             Username<br />
             <input
@@ -93,7 +93,7 @@ function SignUpDetail() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your Username"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
           <div>
@@ -104,7 +104,7 @@ function SignUpDetail() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your Email"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -113,7 +113,7 @@ function SignUpDetail() {
               type="button"
               onClick={handleRequestOtp}
               disabled={!email}
-              className={`w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors font-bold mb-4 ${
+              class={`w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors font-bold mb-4 ${
                 !email ? "cursor-not-allowed opacity-50" : "cursor-pointer"
               }`}
             >
@@ -130,7 +130,7 @@ function SignUpDetail() {
               placeholder="Enter 6-digit OTP"
               maxLength={6}
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -142,7 +142,7 @@ function SignUpDetail() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your Password"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
           <div>
@@ -153,12 +153,12 @@ function SignUpDetail() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your Password"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
           <button
             type="submit"
-            className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
+            class="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
           >
             Sign Up
           </button>
