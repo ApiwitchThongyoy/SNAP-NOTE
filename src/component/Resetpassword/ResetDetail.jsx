@@ -10,6 +10,16 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   function handleRequestOtp() {
+    if (!email) {
+      alert("กรุณากรอก Email ก่อนขอ OTP");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      alert("กรุณากรอก Email ให้ถูกต้อง (ต้องมี @)");
+      return;
+    }
+
     const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedOtp(newOtp);
     alert(`OTP ของคุณคือ: ${newOtp}`);
@@ -81,7 +91,10 @@ function ResetPassword() {
             <button
               type="button"
               onClick={handleRequestOtp}
-              className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold mb-4"
+              disabled={!email}
+              className={`w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors font-bold mb-4 ${
+                !email ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+              }`}
             >
               รับรหัส OTP
             </button>
