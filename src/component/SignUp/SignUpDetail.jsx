@@ -3,39 +3,88 @@ import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 
 function SignUpDetail() {
-  const [username, setUsername] = useState("");  
+  const [username, setUsername] = useState("");
+  const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState(""); 
   const [email, setEmail] = useState("");        
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+ 
+  function handleRequestOtp() {
+    if (!email) {
+      alert("กรุณากรอกอีเมลก่อนรับ OTP");
+      return;
+    }
+    if (!email.includes("@")) { 
+      alert("กรุณาใส่อีเมลที่ถูกต้อง");
+      return;
+    }
+
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(newOtp);
+
+ 
+    alert(`รหัส OTP ของคุณคือ: ${newOtp}`);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
+   
+    if (!username || !email || !otp || !password || !confirmPassword) {
+      alert("กรุณากรอกข้อมูลทุกช่อง!");
+      return;
+    }
+
+  
+    if (!email.includes("@")) {
+      alert("กรุณาใส่อีเมลที่ถูกต้อง");
+      return;
+    }
+
+
+    if (otp !== generatedOtp) {
+      alert("OTP ไม่ถูกต้อง!");
+      return;
+    }
+
+
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      alert("Passwords ไม่ตรงกัน!");
       return;
     }
 
     alert(`Sign Up Successful!\nUsername: ${username}\nEmail: ${email}`);
 
+
     setUsername("");
     setEmail("");
+    setOtp("");
     setPassword("");
     setConfirmPassword("");
+    setGeneratedOtp("");
   }
 
   return (
-    <div>
+    <div className="relative flex min-h-screen bg-[#56A750]">
       <div>
-        <button>
+        <button className="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50">
           <BsArrowLeftCircleFill />
         </button>
       </div>
 
-      <img src={Logo_Login} alt="logo" />
-      <div>
-        <h1>Sign Up</h1>
-        <form onSubmit={handleSubmit}>
+      <div className="absolute left-0 top-0 h-full">
+        <img
+          src={Logo_Login}
+          alt="left-side"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
+        <h1 className="text-3xl font-bold mb-6 text-start text-xxl text-[#164C11]">Sign Up</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <div>
             Username<br />
             <input
@@ -44,6 +93,7 @@ function SignUpDetail() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your Username"
               required
+              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
           <div>
@@ -52,10 +102,38 @@ function SignUpDetail() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your E-mail"
+              placeholder="Enter your Email"
               required
+              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={handleRequestOtp}
+              disabled={!email}
+              className={`w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors font-bold mb-4 ${
+                !email ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+              }`}
+            >
+              รับรหัส OTP
+            </button>
+          </div>
+
+          <div>
+            OTP<br />
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter 6-digit OTP"
+              maxLength={6}
+              required
+              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+            />
+          </div>
+
           <div>
             Password<br />
             <input
@@ -64,6 +142,7 @@ function SignUpDetail() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your Password"
               required
+              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
           <div>
@@ -74,9 +153,15 @@ function SignUpDetail() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your Password"
               required
+              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
-          <button type="submit">Sign Up</button>
+          <button
+            type="submit"
+            className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
+          >
+            Sign Up
+          </button>
         </form>
       </div>
     </div>
