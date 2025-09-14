@@ -1,7 +1,8 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa";
 
-function Main_Detail() {
+
+function CratePostDetail() {
   return (
     <div className="relative flex min-h-screen bg-[#000]">
 
@@ -12,7 +13,7 @@ function Main_Detail() {
       </div>
 
       
-      <div className="absolute left-145 top-14 bg-[#7CFF70] w-90 h-10 rounded-3xl">
+      <div className="absolute left-145 top-14 bg-[#7077ff] w-90 h-10 rounded-3xl">
         <input
           type="text"
           placeholder="ค้นหา"
@@ -63,4 +64,4 @@ function Main_Detail() {
   );
 }
 
-export default Main_Detail;
+export default CratePostDetail;
