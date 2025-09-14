@@ -5,7 +5,10 @@ import Login from './page/Login.jsx'
 import Resetpassword from './page/Resetpassword.jsx'
 import SignUp from './page/SignUp.jsx'
 import Mainpage from './page/Mainpage.jsx'
+import CratePost from './page/CratePost.jsx'
+import Collect from './page/Collect.jsx'
 import './index.css'
+
 
 const router = createBrowserRouter([
   {
@@ -24,6 +27,15 @@ const router = createBrowserRouter([
     path:"main-page",
     element:<Mainpage />
   },
+  {
+    path:"/crate-post",
+    element:<CratePost />
+  },
+  {
+    path:"/collect-post",
+    element:<Collect />
+  },
+
 ])
 
 createRoot(document.getElementById('root')).render(
