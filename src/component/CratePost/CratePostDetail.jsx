@@ -88,6 +88,7 @@ function UploadButtons({ handleFiles }) {
   
 function CratePostDetail() {
 
+
   const navigate = useNavigate();
   const [postText, setPostText] = useState("");
   const [files, setFiles] = useState([]);
@@ -97,10 +98,12 @@ function CratePostDetail() {
   };
 
   const handleCreatePost = () => {
-    console.log("ข้อความ:", postText);
-    console.log("ไฟล์:", files);
-
-    navigate("/main-page");
+  navigate("/main-page", {
+    state: {
+      text: postText,
+      files: files,
+    },
+  });
   };
 
   return (
