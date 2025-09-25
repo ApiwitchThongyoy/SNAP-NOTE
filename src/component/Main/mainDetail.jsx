@@ -198,7 +198,7 @@ function Main_Detail() {
   
 
      
-      <div className="absolute left-310 top-30 bg-[#434343] flex flex-col justify-between w-65 h-145 border rounded p-6 text-2xl items-center">
+      <div className="absolute left-310 top-30 bg-[#434343] flex flex-col justify-between w-65 h-149 border rounded p-6 text-2xl items-center">
         <h2>โฆษณา</h2>
       </div>
 

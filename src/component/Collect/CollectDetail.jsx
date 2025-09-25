@@ -9,17 +9,17 @@ function Collect_Detail() {
     <div className="relative flex min-h-screen bg-[#000]">
 
  
-      <div className="flex gap-10 text-white text-5xl absolute left-334 top-14 cursor-pointer">
+      <div className="flex gap-10 text-white text-5xl absolute left-334 top-10 cursor-pointer">
         <BsBell onClick={() => {}} />
         <BsPersonCircle onClick={() => {}} />
       </div>
 
       
-      <div className="absolute left-145 top-14 bg-[#ff7070] w-90 h-10 rounded-3xl">
+      <div className="absolute left-130 top-10 bg-[#7CFF70] w-120 h-15 rounded-3xl">
         <input
           type="text"
           placeholder="ค้นหา"
-          className="w-full border rounded p-2"
+          className="w-full border rounded-3xl p-4.5"
         />
       </div>
 
@@ -37,28 +37,15 @@ function Collect_Detail() {
       </div>
 
     
-      <div className="absolute left-85 top-30 bg-[#434343] w-220 h-140 flex flex-col justify-between text-2xl border rounded p-3">
-        <div className="absolute left-10 top-5 items-center bg-white w-200 h-120 flex flex-col justify-between text-2xl border rounded p-3">
-          <p>เนื้อหาหลัก</p>
-        </div>
+      <div className="absolute left-85 top-30 bg-[#434343] w-220 h-149 flex justify-between text-2xl  items-start border rounded p-3">
+        <p className=" text-white top-35">คอลเเลคชั่นของคุณ</p>
+        <button className="bg-[#7CFF70] lef-140 top-0 right-0 w-50 h-10 text-flex ml-auto rounded-3xl text-black cursor-pointer">สร้าง +</button>
       </div>
 
-   
-      <div className="absolute left-95 top-135 bg-[#FDFF7E] w-200 h-30 flex flex-col justify-between text-2xl border rounded p-3">
-        <h2>ชื่องาน:</h2>
-        <br />
-        <h2>ชื่อเจ้าของผลงาน:</h2>
-      </div>
-
-
-      <div className="flex gap-10 text-black text-2xl absolute left-250 top-140 cursor-pointer">
-        <FaRegHeart  onClick={() => {}}/>
-        <FaRegComment onClick={() => {}}/>
-        <FaRegBookmark onClick={() => {}}/>
-      </div>
 
      
-      <div className="absolute left-310 top-30 bg-[#434343] flex flex-col justify-between w-65 h-145 border rounded p-6 text-2xl items-center">
+     
+      <div className="absolute left-310 top-30 bg-[#434343] flex flex-col justify-between w-65 h-149 border rounded p-6 text-2xl items-center">
         <h2>โฆษณา</h2>
       </div>
 

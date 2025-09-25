@@ -7,6 +7,7 @@ import SignUp from './page/SignUp.jsx'
 import Mainpage from './page/Mainpage.jsx'
 import CratePost from './page/CratePost.jsx'
 import Collect from './page/Collect.jsx'
+import SettingDetail from './page/Setting.jsx'
 import './index.css'
 
 
@@ -34,7 +35,11 @@ const router = createBrowserRouter([
   {
     path:"/collect-post",
     element:<Collect />
-  },
+  },{
+    path:"/setting",
+    element:<Setting />
+  }
+
 
 ])
 
