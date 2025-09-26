@@ -1,7 +1,7 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa";
 
-function SettingDetail() {
+function Setting_accountDetail() {
   return (
     <div className="relative flex min-h-screen bg-[#000]">
 
@@ -46,8 +46,15 @@ function SettingDetail() {
         <button className="w-50 h-10 rounded-3xl hover:bg-gray-200 active:bg-gray-300 cursor-pointer m-2.5 text-sm">การเเจ้งเตือน</button>
         <button className="w-50 h-10 rounded-3xl hover:bg-gray-200 active:bg-gray-300 cursor-pointer m-2.5 text-sm">ความเป็นส่วนตัว</button>
         </div>
-        <div className="absolute left-90 top-5 bg-amber-50 w-185 h-139 flex flex-col justify-start text-2xl border rounded-lg p-3">ธีมของเว็ป
-          <p className="m-5 text-lg">โทนสว่าง</p>
+        <div className="absolute left-90 top-5 bg-amber-50 w-185 h-139 flex flex-col justify-start text-2xl border rounded-lg p-3">บัญชี
+          <p className="m-5 text-lg">account 1</p>
+          <h1>บัญชีอื่นๆ</h1>
+          <p className="m-5 text-lg">account 2</p>
+          <p className="m-5 text-lg">account 3</p>
+          <p className="m-5 text-lg">account 4</p>
+          <h1>เกี่ยวกับบัญชี</h1>
+          <button className="fixed bottom-30 w-50 h-10 rounded-3xl hover:bg-gray-200 active:bg-gray-300cursor-pointer m-2.5 text-sm">+ เพิ่มบัญชี</button>
+          <button className="fixed bottom-20 w-50 h-10 rounded-3xl hover:bg-gray-200 active:bg-gray-300cursor-pointer m-2.5 text-sm">จัดการบัญชี</button>
         </div>
       </div>
 
@@ -59,4 +66,4 @@ function SettingDetail() {
   );
 }
 
-export default SettingDetail;
+export default Setting_accountDetail;

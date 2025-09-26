@@ -127,13 +127,13 @@ function CratePostDetail() {
       
       <div className="absolute left-20 top-30 bg-[#434343] flex flex-col justify-between w-60 h-149 border rounded p-6 text-2xl">
         <div className="flex flex-col gap-10 text-white">
-          <button className="bg-[#7CFF70] w-50 h-10 rounded-3xl text-black cursor-pointer">หน้าหลัก</button>
-          <button className="w-50 h-10 rounded-3xl bg-black cursor-pointer">โพสต์</button>
-          <button className="w-50 h-10 rounded-3xl bg-black cursor-pointer">บันทึก</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">หน้าหลัก</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">โพสต์</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">บันทึก</button>
         </div>
 
         <div className="absolute left-5 top-135 text-white">
-          <button className="w-50 h-10 rounded-3xl bg-black cursor-pointer">ตั้งค่า</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">ตั้งค่า</button>
         </div>
       </div>
 

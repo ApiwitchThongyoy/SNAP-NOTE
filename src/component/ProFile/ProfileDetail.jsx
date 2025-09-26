@@ -4,18 +4,18 @@ import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa
 
 
 
-function Collect_Detail() {
-  return (
-    <div className="relative flex min-h-screen bg-[#000]">
+function Profile_Detail(){
+  
 
- 
+    return (
+    <div className="relative flex min-h-screen bg-[#000]">
       <div className="flex gap-10 text-white text-5xl absolute left-334 top-10 cursor-pointer">
         <BsBell onClick={() => {}} />
         <BsPersonCircle onClick={() => {}} />
       </div>
 
       
-      <div className="absolute left-130 top-10 bg-[#7CFF70] w-120 h-15 rounded-3xl">
+      <div className="absolute left-130 top-10 bg-[#7077ff] w-120 h-15 rounded-3xl">
         <input
           type="text"
           placeholder="ค้นหา"
@@ -37,20 +37,14 @@ function Collect_Detail() {
       </div>
 
     
-      <div className="absolute left-85 top-30 bg-[#434343] w-220 h-149 flex justify-between text-2xl  items-start border rounded p-3">
-        <p className=" text-white top-35">คอลเเลคชั่นของคุณ</p>
-        <button className="bg-[#7CFF70] lef-140 top-0 right-0 w-50 h-10 text-flex ml-auto rounded-3xl text-black cursor-pointer">สร้าง +</button>
+      <div className="absolute left-85 top-30 bg-[#434343] w-280 h-149 flex flex-col justify-between text-2xl border rounded-md p-3">
+        <div className="absolute left-5 top-5 bg-amber-50 w-270 h-139 flex flex-col justify-start text-2xl border rounded-lg p-3">
+        <div className="flex items-start justify-between">
+          <p>dkfjgthtrkl</p>
+        </div>
+        </div>
       </div>
-
-
-     
-     
-      <div className="absolute left-310 top-30 bg-[#434343] flex flex-col justify-between w-65 h-149 border rounded p-6 text-2xl items-center">
-        <h2>โฆษณา</h2>
-      </div>
-
     </div>
   );
 }
-
-export default Collect_Detail;
+export default Profile_Detail
