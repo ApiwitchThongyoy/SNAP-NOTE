@@ -7,6 +7,11 @@ import SignUp from './page/SignUp.jsx'
 import Mainpage from './page/Mainpage.jsx'
 import CratePost from './page/CratePost.jsx'
 import Collect from './page/Collect.jsx'
+import Setting from './page/Setting.jsx'
+import ProFile from './page/Profile.jsx'
+import Setting_account from './page/Setting_account.jsx'
+import Setting_message from './page/Setting_message.jsx'
+import Setting_private from './page/Setting_private.jsx'
 import './index.css'
 
 
@@ -34,7 +39,24 @@ const router = createBrowserRouter([
   {
     path:"/collect-post",
     element:<Collect />
-  },
+  },{
+    path:"/setting",
+    element:<Setting />
+  },{
+    path:"/profile",
+    element:<ProFile />
+  },{
+    path:"/settingaaccount",
+    element:<Setting_account />
+  },{
+    path:"/settingmessage",
+    element:<Setting_message />
+  },{
+    path:"/settingprivate",
+    element:<Setting_private/>
+  }
+
+
 
 ])
 
