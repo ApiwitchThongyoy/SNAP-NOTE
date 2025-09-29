@@ -4,7 +4,7 @@ import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa
 
 
 
-function Profile_Detail(){
+function Profile_likeDetail(){
   
 
     return (
@@ -72,4 +72,4 @@ function Profile_Detail(){
     </div>
   );
 }
-export default Profile_Detail
+export default Profile_likeDetail

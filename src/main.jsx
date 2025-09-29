@@ -9,6 +9,7 @@ import CratePost from './page/CratePost.jsx'
 import Collect from './page/Collect.jsx'
 import Setting from './page/Setting.jsx'
 import ProFile from './page/Profile.jsx'
+import ProFile_like from './page/Profile_like.jsx'
 import Setting_account from './page/Setting_account.jsx'
 import Setting_message from './page/Setting_message.jsx'
 import Setting_private from './page/Setting_private.jsx'
@@ -45,6 +46,9 @@ const router = createBrowserRouter([
   },{
     path:"/profile",
     element:<ProFile />
+  },{
+    path:"/profile-like",
+    element:<ProFile_like/>
   },{
     path:"/settingaaccount",
     element:<Setting_account />
