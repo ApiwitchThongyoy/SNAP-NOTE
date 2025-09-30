@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 
@@ -9,6 +10,7 @@ function SignUpDetail() {
   const [email, setEmail] = useState("");        
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
  
   function handleRequestOtp() {
@@ -64,12 +66,15 @@ function SignUpDetail() {
     setPassword("");
     setConfirmPassword("");
     setGeneratedOtp("");
+    navigate("/main-page");
   }
 
   return (
     <div class="relative flex min-h-screen bg-[#56A750]">
       <div>
-        <button class="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50">
+        <button class="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50"
+        onClick={() => navigate(-1)}
+        >
           <BsArrowLeftCircleFill />
         </button>
       </div>
