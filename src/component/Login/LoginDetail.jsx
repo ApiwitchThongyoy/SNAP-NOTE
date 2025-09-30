@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
 
 function LoginDetail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   function handleEmailChange(e) {
     setEmail(e.target.value);
@@ -18,6 +20,7 @@ function LoginDetail() {
     alert("Welcome");
     setEmail("");
     setPassword("");
+    navigate("/main-page");
   }
 
   return (
@@ -57,10 +60,14 @@ function LoginDetail() {
           />
 
           <div class="flex flex-row gap-90 text-sm mb-6">
-            <span class="text-[#000000] cursor-pointer hover:underline">
+            <span class="text-[#000000] cursor-pointer hover:underline"
+            onClick={() => navigate("/sign-up")}
+            >
               Sign up?
             </span>
-            <span class="text-[#000000] cursor-pointer hover:underline">
+            <span class="text-[#000000] cursor-pointer hover:underline"
+            onClick={() => navigate("/reset-password")}
+            >
               Forget Password?
             </span>
           </div>
