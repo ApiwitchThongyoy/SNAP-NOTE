@@ -1,6 +1,8 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 function Collect_Detail() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
       {/* Header */}
@@ -19,29 +21,37 @@ function Collect_Detail() {
           <button>
             <BsBell />
           </button>
-          <button>
+          <button onClick={() => navigate("/profile")} >
             <BsPersonCircle />
           </button>
         </div>
       </div>
 
       {/* Body: Sidebar | Content | Ads */}
-      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-4xl">
+      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2">
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            onClick={() => navigate("/main-page")}
+            >
               หน้าหลัก
             </button>
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2">
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            onClick={() => navigate("/crate-post")}
+            >
               โพสต์
             </button>
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2">
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            onClick={() => navigate("/collect-post")}
+            >
               บันทึก
             </button>
           </div>
 
-          <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2">
+          <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+          onClick={() => navigate("/setting")}
+          >
             ตั้งค่า
           </button>
         </div>

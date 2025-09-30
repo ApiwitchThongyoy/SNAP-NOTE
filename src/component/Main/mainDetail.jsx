@@ -38,7 +38,7 @@ function Main_Detail() {
 
       {/* Body: Sidebar | Content | Ads */}
       {/* 🔥 จุดสำคัญ: เพิ่ม gap-6, px-6, py-4 เพื่อสร้างระยะห่างระหว่างกล่อง */}
-      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-4xl">
+      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">

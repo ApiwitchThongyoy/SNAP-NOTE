@@ -1,75 +1,113 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
-import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
+function Profile_likeDetail() {
+  const navigate = useNavigate();
 
-
-
-function Profile_likeDetail(){
-  
-
-    return (
-    <div className="relative flex min-h-screen bg-[#000]">
-      <div className="flex gap-10 text-white text-5xl absolute left-334 top-10 cursor-pointer">
-        <BsBell onClick={() => {}} />
-        <BsPersonCircle onClick={() => {}} />
-      </div>
-
-      
-      <div className="absolute left-130 top-10 bg-[#7077ff] w-120 h-15 rounded-3xl">
-        <input
-          type="text"
-          placeholder="ค้นหา"
-          className="w-full border rounded-3xl p-4.5"
-        />
-      </div>
-
-      
-      <div className="absolute left-20 top-30 bg-[#434343] flex flex-col justify-between w-60 h-149 border rounded p-6 text-2xl">
-        <div className="flex flex-col gap-10 text-white">
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">หน้าหลัก</button>
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">โพสต์</button>
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">บันทึก</button>
+  return (
+    <div className="flex flex-col h-screen w-screen bg-black text-white">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 bg-black border-b border-gray-700">
+        {/* Search bar */}
+        <div className="flex-1 max-w-lg mx-auto bg-[#7CFF70] rounded-3xl px-4 py-2">
+          <input
+            type="text"
+            placeholder="ค้นหา"
+            className="w-full rounded-3xl p-3 text-black"
+          />
         </div>
 
-        <div className="absolute left-5 top-135 text-white">
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">ตั้งค่า</button>
+        {/* Icons */}
+        <div className="flex gap-6 text-3xl">
+          <button>
+            <BsBell />
+          </button>
+          <button onClick={() => navigate("/profile")}>
+            <BsPersonCircle />
+          </button>
         </div>
       </div>
 
-    
-      <div className="absolute left-85 top-30 bg-[#434343] w-280 h-149 flex flex-col justify-between text-2xl border rounded-md p-3">
-        
-        <div className="absolute  top-5 bg-amber-50 w-274 h-139 rounded-lg p-3 flex flex-col items-start">
-          {/* รูปโปรไฟล์ */}
-          <div className="flex items-center gap-4 ">
-            <div className="relative left-50 w-40 h-40 rounded-full border-4 border-green-400 overflow-hidden mb-3">
+      {/* Body */}
+      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
+        {/* Sidebar */}
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+          <div className="flex flex-col gap-6">
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            onClick={() => navigate("/main-page")}
+            >
+              หน้าหลัก
+            </button>
+            <button
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              onClick={() => navigate("/crate-post")}
+            >
+              โพสต์
+            </button>
+            <button
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              onClick={() => navigate("/collect-post")}
+            >
+              บันทึก
+            </button>
+          </div>
+          <button
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            onClick={() => navigate("/setting")}
+          >
+            ตั้งค่า
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
+          {/* Profile Info */}
+          <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
               <img
                 src="https://placekitten.com/200/200"
                 alt="profile"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className=" ml-70 mb-3">
-              <h2 className="font-semibold text-lg">user_name</h2>
-              <p className="text-sm text-gray-600">5 โพสต์</p>
-              <p className="text-sm text-gray-600">about me.....</p>
+            <div>
+              <h2 className="font-bold text-lg">user_name</h2>
+              <p className="text-sm">5 โพสต์</p>
+              <p className="text-sm">about me.....</p>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="bg-[#434343] rounded-xl p-6">
+            <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
+              <button className="text-gray-300"
+              onClick={() => navigate("/profile")}
+              >
+              โพสต์
+              </button>
+              <button className="border-b-2 border-green-500 font-semibold"
+              onClick={() => navigate("/profile-like")}
+              >
+              ถูกใจ
+              </button>
+            </div>
+
+            {/* Likes */}
+            <div className="flex flex-col gap-4">
+              <div className="bg-[#636363] rounded-lg p-4">ถูกใจ 1</div>
+              <div className="bg-[#636363] rounded-lg p-4">ถูกใจ 2</div>
+              <div className="bg-[#636363] rounded-lg p-4">ถูกใจ 3</div>
             </div>
           </div>
         </div>
 
-        <div className="absolute top-50 bg-amber-50 w-274 h-95 flex flex-col items-center  text-2xl border rounded-lg p-3">
-          <div className="flex justify-center gap-10 mb-30">
-            <button className="px-4 py-1 relative">
-              <span className="border-t-4 border-transparent block pb-1 hover:border-green-500 active:border-green-500 text-sm">โพสต์</span>
-            </button>  
-            <button className="px-4 py-1 relative">
-              <span className="border-t-4 border-transparent block pb-1 hover:border-green-500 active:border-green-500 text-sm">ถูกใจ</span>
-            </button>
-          </div>
+        {/* Ads */}
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+          <h2>โฆษณา</h2>
         </div>
       </div>
-        
     </div>
   );
 }
-export default Profile_likeDetail
+
+export default Profile_likeDetail;
