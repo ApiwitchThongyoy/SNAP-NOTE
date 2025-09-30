@@ -2,6 +2,8 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { FaRegHeart, FaHeart, FaRegBookmark, FaRegComment } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -10,6 +12,7 @@ function Main_Detail() {
 
   const location = useLocation();
   const newPost = location.state;
+  const navigate = useNavigate();
   
   
   const [posts, setPosts] = useState([
@@ -85,9 +88,21 @@ function Main_Detail() {
     <div className="relative flex min-h-screen bg-[#000]">
 
  
-      <div className="flex gap-10 text-white text-5xl absolute left-334 top-10 cursor-pointer">
-        <BsBell onClick={() => {}} />
-        <BsPersonCircle onClick={() => {}} />
+      <div>
+        <button 
+        type="button"
+        className="flex gap-10 text-white text-5xl absolute left-334 top-10 cursor-pointer"
+        onClick={() => navigate()}>
+          <BsBell />
+        </button>
+
+        <button 
+        type="button"
+        className="flex gap-10 text-white text-5xl absolute left-356 top-10 cursor-pointer"
+        onClick={() => navigate("/profile")}>
+          <BsPersonCircle />
+        </button>
+        
       </div>
 
       
@@ -103,12 +118,24 @@ function Main_Detail() {
       <div className="absolute left-20 top-30 bg-[#434343] flex flex-col justify-between w-60 h-149 border rounded p-6 text-2xl">
         <div className="flex flex-col gap-10 text-white">
           <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">หน้าหลัก</button>
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">โพสต์</button>
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">บันทึก</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer"
+          onClick={() => navigate("/crate-post")}
+          >
+          โพสต์
+          </button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer"
+          onClick={() => navigate("/collect-post")}
+          >
+          บันทึก
+          </button>
         </div>
 
         <div className="absolute left-5 top-135 text-white">
-          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer">ตั้งค่า</button>
+          <button className="w-50 h-10 rounded-3xl hover:bg-green-400 active:bg-green-500 text-black cursor-pointer"
+          onClick={() => navigate("/setting")}
+          >
+          ตั้งค่า
+          </button>
         </div>
       </div>
 
