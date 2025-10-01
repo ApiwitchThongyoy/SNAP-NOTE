@@ -1,22 +1,16 @@
+import { useContext } from "react";
+import { PostContext } from "../../context/PostContext";
 import { BsBell, BsPersonCircle } from "react-icons/bs";
-import { FaRegHeart, FaHeart, FaRegBookmark, FaBookmark, FaRegComment } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
-function Main_Detail() {
+export default function MainDetail() {
+  const { posts } = useContext(PostContext);
   const navigate = useNavigate();
 
-  // Mock post ตัวอย่าง
-  const [posts] = useState([
-    { id: 1, text: "วันนี้อากาศดี 🌤️", likes: 3, comments: ["จริงครับ", "ร้อนมาก!"], saved: false },
-    { id: 2, text: "React สนุกมาก 🚀", likes: 10, comments: ["จริง!", "ใช่เลย"], saved: true },
-  ]);
-
   return (
-    <div className="flex flex-col h-screen w-screen bg-black text-white">
+    <div className="flex flex-col min-h-screen w-screen bg-black text-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-black border-b border-gray-700">
-        {/* Search bar */}
         <div className="flex-1 max-w-lg mx-auto bg-[#7CFF70] rounded-3xl px-4 py-2">
           <input
             type="text"
@@ -25,9 +19,8 @@ function Main_Detail() {
           />
         </div>
 
-        {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button onClick={() => navigate()}>
+          <button>
             <BsBell />
           </button>
           <button onClick={() => navigate("/profile")}>
@@ -36,13 +29,15 @@ function Main_Detail() {
         </div>
       </div>
 
-      {/* Body: Sidebar | Content | Ads */}
-      {/* 🔥 จุดสำคัญ: เพิ่ม gap-6, px-6, py-4 เพื่อสร้างระยะห่างระหว่างกล่อง */}
+      {/* Body */}
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2">
+            <button
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              onClick={() => navigate("/main-page")}
+            >
               หน้าหลัก
             </button>
             <button
@@ -52,7 +47,7 @@ function Main_Detail() {
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 "
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
@@ -68,29 +63,47 @@ function Main_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
+        <div className="w-3/5 bg-[#636363] p-6 rounded-xl">
           <h2 className="text-xl font-bold mb-4">โพสต์ล่าสุด</h2>
-          {posts.map((p) => (
-            <div key={p.id} className="bg-white text-black rounded-xl p-4 mb-4">
-              <p className="text-lg mb-2">📌 {p.text}</p>
-              <div className="flex gap-6 text-xl">
-                <span className="flex items-center gap-2">
-                  <FaHeart className="text-red-500" /> {p.likes}
-                </span>
-                <span className="flex items-center gap-2">
-                  <FaRegComment /> {p.comments.length}
-                </span>
-                <span className="flex items-center gap-2">
-                  {p.saved ? <FaBookmark className="text-yellow-500" /> : <FaRegBookmark />}
-                </span>
-              </div>
-              <div className="mt-2 text-gray-700">
-                {p.comments.map((c, i) => (
-                  <p key={i} className="text-sm">💬 {c}</p>
-                ))}
-              </div>
+
+          {posts.length === 0 ? (
+            <p className="text-gray-300">ยังไม่มีโพสต์</p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {posts.map((post, index) => (
+                <div
+                  key={index}
+                  className="bg-white text-black rounded-xl p-4 shadow"
+                >
+                  <p className="mb-2">{post.text}</p>
+                  {post.files && post.files.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {post.files.map((file, i) => {
+                        if (file.type.startsWith("image/")) {
+                          return (
+                            <img
+                              key={i}
+                              src={file.url}
+                              alt="uploaded"
+                              className="w-32 h-32 object-cover rounded"
+                            />
+                          );
+                        }
+                        return (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-gray-200 rounded text-sm"
+                          >
+                            📄 {file.name}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
 
         {/* Ads */}
@@ -101,5 +114,3 @@ function Main_Detail() {
     </div>
   );
 }
-
-export default Main_Detail;

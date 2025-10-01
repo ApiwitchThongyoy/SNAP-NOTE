@@ -1,10 +1,12 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../context/usePosts";
 
 // ✅ ปุ่มอัปโหลดไฟล์
 function UploadButtons({ handleFiles }) {
   const [fileData, setFileData] = useState([]);
+  
 
   const formatFileSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
@@ -65,6 +67,7 @@ function UploadButtons({ handleFiles }) {
 
 // ✅ หน้า Create Post
 function CratePostDetail() {
+  const { addPost } = usePosts();
   const navigate = useNavigate();
   const [postText, setPostText] = useState("");
   const [files, setFiles] = useState([]);
@@ -72,12 +75,8 @@ function CratePostDetail() {
   const handleFiles = (newFiles) => setFiles(newFiles);
 
   const handleCreatePost = () => {
-    navigate("/main-page", {
-      state: {
-        text: postText,
-        files: files,
-      },
-    });
+    addPost({ text: postText, files });
+    navigate("/main-page");
   };
 
   return (

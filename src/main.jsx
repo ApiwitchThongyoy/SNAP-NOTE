@@ -1,21 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter,RouterProvider,Route,Link } from 'react-router-dom'
-import Login from './page/Login.jsx'
-import Resetpassword from './page/Resetpassword.jsx'
-import SignUp from './page/SignUp.jsx'
-import Mainpage from './page/Mainpage.jsx'
-import CratePost from './page/CratePost.jsx'
-import Collect from './page/Collect.jsx'
-import Setting from './page/Setting.jsx'
-import ProFile from './page/Profile.jsx'
-import ProFile_like from './page/Profile_like.jsx'
-import Setting_account from './page/Setting_account.jsx'
-import Setting_message from './page/Setting_message.jsx'
-import Setting_private from './page/Setting_private.jsx'
-import './index.css'
-
-
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Login from './page/Login.jsx';
+import Resetpassword from './page/Resetpassword.jsx';
+import SignUp from './page/SignUp.jsx';
+import Mainpage from './page/Mainpage.jsx';
+import CratePost from './page/CratePost.jsx';
+import Collect from './page/Collect.jsx';
+import Setting from './page/Setting.jsx';
+import ProFile from './page/ProFile.jsx';
+import ProFile_like from './page/Profile_like.jsx';
+import Setting_account from './page/Setting_account.jsx';
+import Setting_message from './page/Setting_message.jsx';
+import Setting_private from './page/Setting_private.jsx';
+import './index.css';
+import { PostProvider } from './context/PostProvider.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,9 +61,11 @@ const router = createBrowserRouter([
 
 
 ])
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+    {/* ✅ ครอบ RouterProvider ด้วย PostProvider */}
+    <PostProvider>
+      <RouterProvider router={router} />
+    </PostProvider>
+  </StrictMode>
+);

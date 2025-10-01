@@ -1,8 +1,10 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../context/usePosts";
 
 function Profile_Detail() {
   const navigate = useNavigate();
+  const { posts } = usePosts();
 
   return (
     <div className="flex flex-col h-screen w-screen bg-black text-white">
@@ -94,9 +96,11 @@ function Profile_Detail() {
 
             {/* Posts */}
             <div className="flex flex-col gap-4">
-              <div className="bg-[#636363] rounded-lg p-4">โพสต์ที่ 1</div>
-              <div className="bg-[#636363] rounded-lg p-4">โพสต์ที่ 2</div>
-              <div className="bg-[#636363] rounded-lg p-4">โพสต์ที่ 3</div>
+              {posts.map((post, index) => (
+                <div key={index} className="bg-[#636363] rounded-lg p-4">
+                  {post.text}
+                </div>
+              ))}
             </div>
           </div>
         </div>
