@@ -1,3 +1,4 @@
+// src/context/PostProvider.jsx
 import { useState, useEffect } from "react";
 import { PostContext } from "./PostContext";
 
@@ -11,6 +12,7 @@ export function PostProvider({ children }) {
     localStorage.setItem("posts", JSON.stringify(posts));
   }, [posts]);
 
+  // ✅ เพิ่มโพสต์ใหม่
   const addPost = ({ text, files }) => {
     const fileURLs = files.map((file) => ({
       name: file.name,
@@ -22,6 +24,7 @@ export function PostProvider({ children }) {
       text,
       files: fileURLs,
       likes: 0,
+      liked: false,   // ✅ ใช้ควบคุมกดถูกใจ/เลิกถูกใจ
       comments: [],
       saved: false,
     };
@@ -50,18 +53,27 @@ export function PostProvider({ children }) {
     );
   };
 
+  // ✅ ลบโพสต์
   const deletePost = (index) => {
     setPosts((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // ✅ กดถูกใจ / เลิกถูกใจ
   const toggleLike = (index) => {
     setPosts((prev) =>
       prev.map((post, i) =>
-        i === index ? { ...post, likes: post.likes + 1 } : post
+        i === index
+          ? {
+              ...post,
+              liked: !post.liked,
+              likes: post.liked ? post.likes - 1 : post.likes + 1,
+            }
+          : post
       )
     );
   };
 
+  // ✅ บันทึก/เลิกบันทึก
   const toggleSave = (index) => {
     setPosts((prev) =>
       prev.map((post, i) =>

@@ -1,13 +1,37 @@
+import { useState } from "react";
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
 
 function Profile_Detail() {
   const navigate = useNavigate();
-  const { posts } = usePosts();
+  const { posts, deletePost, editPost } = usePosts();
+
+  const [editIndex, setEditIndex] = useState(null);
+  const [editText, setEditText] = useState("");
+  const [editFiles, setEditFiles] = useState([]);
+
+  // กดแก้ไข
+  const handleEdit = (index, text) => {
+    setEditIndex(index);
+    setEditText(text);
+    setEditFiles([]);
+  };
+
+  // บันทึกการแก้ไข -> ใช้ editPost ทับโพสต์เดิม
+  const handleSaveEdit = () => {
+    editPost(editIndex, {
+      text: editText,
+      files: editFiles.length > 0 ? editFiles : undefined,
+    });
+
+    setEditIndex(null);
+    setEditText("");
+    setEditFiles([]);
+  };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-black text-white">
+    <div className="flex flex-col min-h-screen w-screen bg-black text-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-black border-b border-gray-700">
         {/* Search bar */}
@@ -35,8 +59,9 @@ function Profile_Detail() {
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
-            onClick={() => navigate("/main-page")}
+            <button
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
@@ -74,7 +99,7 @@ function Profile_Detail() {
             </div>
             <div>
               <h2 className="font-bold text-lg">user_name</h2>
-              <p className="text-sm">5 โพสต์</p>
+              <p className="text-sm">{posts.length} โพสต์</p>
               <p className="text-sm">about me.....</p>
             </div>
           </div>
@@ -82,23 +107,104 @@ function Profile_Detail() {
           {/* Tabs */}
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
-              <button className="border-b-2 border-green-500 font-semibold"
-              onClick={() => navigate("/profile")}
+              <button
+                className="border-b-2 border-green-500 font-semibold"
+                onClick={() => navigate("/profile")}
               >
-              โพสต์
+                โพสต์
               </button>
-              <button className="text-gray-300"
-              onClick={() => navigate("/profile-like")}
+              <button
+                className="text-gray-300"
+                onClick={() => navigate("/profile-like")}
               >
-              ถูกใจ
+                ถูกใจ
               </button>
             </div>
 
             {/* Posts */}
             <div className="flex flex-col gap-4">
               {posts.map((post, index) => (
-                <div key={index} className="bg-[#636363] rounded-lg p-4">
-                  {post.text}
+                <div
+                  key={index}
+                  className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2"
+                >
+                  {editIndex === index ? (
+                    <div className="flex flex-col gap-2">
+                      {/* Edit text */}
+                      <textarea
+                        className="w-full border rounded p-2 text-black"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                      />
+
+                      {/* Edit files */}
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => setEditFiles([...e.target.files])}
+                        className="text-sm"
+                      />
+
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          className="px-4 py-2 bg-green-500 text-white rounded"
+                          onClick={handleSaveEdit}
+                        >
+                          บันทึก
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-gray-400 text-white rounded"
+                          onClick={() => setEditIndex(null)}
+                        >
+                          ยกเลิก
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Post text */}
+                      <p className="mb-2">{post.text}</p>
+
+                      {/* Show files */}
+                      {post.files && post.files.length > 0 && (
+                        <div className="flex gap-4 flex-wrap">
+                          {post.files.map((file, i) =>
+                            file.type.startsWith("image/") ? (
+                              <img
+                                key={i}
+                                src={file.url}
+                                alt="uploaded"
+                                className="max-w-full h-auto rounded"
+                              />
+                            ) : (
+                              <span
+                                key={i}
+                                className="px-2 py-1 bg-gray-200 rounded text-sm text-black"
+                              >
+                                📄 {file.name}
+                              </span>
+                            )
+                          )}
+                        </div>
+                      )}
+
+                      {/* Buttons */}
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          className="px-3 py-1 bg-blue-500 text-white rounded"
+                          onClick={() => handleEdit(index, post.text)}
+                        >
+                          แก้ไข
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-red-500 text-white rounded"
+                          onClick={() => deletePost(index)}
+                        >
+                          ลบ
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
