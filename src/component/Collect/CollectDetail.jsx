@@ -265,7 +265,7 @@ function Collect_Detail() {
                   ))}
                   <p>{post.text}</p>
                   <button
-                    className="text-red-500 mt-2  hover:bg-red-200 active:bg-red-300 text-black rounded-3xl p-2"
+                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300"
                     onClick={() => toggleSave(post.id)}
                   >
                     ❌ ลบบันทึก

@@ -57,6 +57,12 @@ function SignUpDetail() {
       return;
     }
 
+    localStorage.setItem("user", JSON.stringify({ 
+      username, 
+      email,
+    }));
+    
+
     alert(`Sign Up Successful!\nUsername: ${username}\nEmail: ${email}`);
 
 
