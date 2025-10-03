@@ -102,7 +102,8 @@ function Profile_Detail() {
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content อีกที*/}
+        
         <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
           {/* Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
