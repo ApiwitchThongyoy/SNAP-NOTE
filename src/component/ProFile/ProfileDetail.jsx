@@ -15,6 +15,11 @@ function Profile_Detail() {
   const [editText, setEditText] = useState("");
   const [editFiles, setEditFiles] = useState([]);
 
+  //เพื่ม state สำหรับรูปโปรไฟล์
+  const [profileImg, setProfileImg] = useState(
+  localStorage.getItem("profileImg") || "https://placekitten.com/200/200"
+);
+
   // โหลด aboutMe จาก localStorage เมื่อ component mount
   useEffect(() => {
     const savedAbout = localStorage.getItem("aboutMe") || "";
@@ -45,6 +50,18 @@ function Profile_Detail() {
     setEditText("");
     setEditFiles([]);
   };
+
+  //เพิ่มฟังก์ชัน handleProfileImgChange
+  const handleProfileImgChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    setProfileImg(reader.result);
+    localStorage.setItem("profileImg", reader.result);
+  };
+  reader.readAsDataURL(file);
+};
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -105,14 +122,26 @@ function Profile_Detail() {
         {/* Content อีกที*/}
         
         <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
-          {/* Profile Info */}
+          {/* Profile Info แก้ตรงนี้*/}
+
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
-              <img
-                src="https://placekitten.com/200/200"
-                alt="profile"
-                className="w-full h-full object-cover"
+            <div className="flex flex-col items-center">
+              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400 relative flex items-center justify-center ">
+                <img
+                  src={profileImg}
+                  className="w-full h-full object-cover"
+                />
+            </div>
+            <label className="mt-2 w-28 text-sm cursor-pointer text-center">แก้ไขรูปภาพ
+              <input
+
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleProfileImgChange}
+                title="แก้ไขรูปภาพ"
               />
+            </label>
             </div>
             <div>
               <h2 className="font-bold text-lg">{user.username}</h2>
