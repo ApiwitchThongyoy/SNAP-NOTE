@@ -93,6 +93,7 @@ function Collect_Detail() {
     );
   };
 
+
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
       {/* Header */}
@@ -215,8 +216,7 @@ function Collect_Detail() {
                         <p className="text-sm mt-2">{post.text}</p>
                         <button
                           className="text-red-500 mt-2"
-                          onClick={() => toggleSave(post.id)}
-                        >
+                          onClick={() => toggleSave(post.id)}>
                           ❌ ลบบันทึก
                         </button>
                       </div>
@@ -227,7 +227,7 @@ function Collect_Detail() {
             )}
           </div>
 
-          {/* Saved Posts */}
+          {/* Saved Posts ต้องแก้*/}
           <h2 className="text-xl font-bold mt-6">โพสต์ที่คุณบันทึก</h2>
           <div className="grid grid-cols-2 gap-4 mt-4">
             {posts
@@ -265,7 +265,7 @@ function Collect_Detail() {
                   ))}
                   <p>{post.text}</p>
                   <button
-                    className="text-red-500 mt-2"
+                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300"
                     onClick={() => toggleSave(post.id)}
                   >
                     ❌ ลบบันทึก

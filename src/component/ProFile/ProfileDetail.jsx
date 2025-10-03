@@ -1,15 +1,31 @@
-import { useState } from "react";
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
+import { useState, useEffect } from "react";
 
 function Profile_Detail() {
+  //ตัวอย่างในโปรไฟล์
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  //ดึงข้อมูล user จาก localStorage
+  const [aboutMe, setAboutMe] = useState("");
   const navigate = useNavigate();
   const { posts, deletePost, editPost } = usePosts();
 
   const [editIndex, setEditIndex] = useState(null);
   const [editText, setEditText] = useState("");
   const [editFiles, setEditFiles] = useState([]);
+
+  // โหลด aboutMe จาก localStorage เมื่อ component mount
+  useEffect(() => {
+    const savedAbout = localStorage.getItem("aboutMe") || "";
+    setAboutMe(savedAbout);
+  }, []);
+
+  // ฟังก์ชันบันทึก aboutMe
+  const handleAboutMeChange = (e) => {
+    setAboutMe(e.target.value);
+    localStorage.setItem("aboutMe", e.target.value);
+  };
 
   // กดแก้ไข
   const handleEdit = (index, text) => {
@@ -86,7 +102,8 @@ function Profile_Detail() {
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content อีกที*/}
+        
         <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
           {/* Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
@@ -98,9 +115,14 @@ function Profile_Detail() {
               />
             </div>
             <div>
-              <h2 className="font-bold text-lg">user_name</h2>
+              <h2 className="font-bold text-lg">{user.username}</h2>
               <p className="text-sm">{posts.length} โพสต์</p>
-              <p className="text-sm">about me.....</p>
+              <textarea
+                className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
+                placeholder="about me....."
+                value={aboutMe}
+                onChange={handleAboutMeChange}
+              />
             </div>
           </div>
 
