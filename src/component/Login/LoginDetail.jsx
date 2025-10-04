@@ -17,11 +17,18 @@ function LoginDetail() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    alert("Welcome");
-    setEmail("");
-    setPassword("");
-    navigate("/main-page");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const found = users.find(u => u.email === email && u.password === password);
+    if (!found) {
+      alert("Welcome");
+      setEmail("");
+      setPassword("");
+      navigate("/main-page");
+    } else {
+      alert("Invalid email or password");
+    }
   }
+  
 
   return (
     <div class="relative flex min-h-screen bg-[#56A750]">

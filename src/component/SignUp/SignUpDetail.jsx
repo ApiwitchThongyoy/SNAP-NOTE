@@ -11,6 +11,7 @@ function SignUpDetail() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  
 
  
   function handleRequestOtp() {
