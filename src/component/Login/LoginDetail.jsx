@@ -29,7 +29,6 @@ function LoginDetail() {
     }
   }
   
-
   return (
     <div class="relative flex min-h-screen bg-[#56A750]">
       <div class="absolute left-0 top-0 h-full">
