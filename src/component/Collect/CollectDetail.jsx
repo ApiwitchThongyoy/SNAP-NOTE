@@ -200,6 +200,7 @@ function Collect_Detail() {
                             ) : post.files[0].type.startsWith("video/") ? (
                               <video
                                 src={post.files[0].url}
+                                controls
                                 className="max-h-40 rounded cursor-pointer"
                                 onClick={() => setViewFile(post.files[0])}
                               />
