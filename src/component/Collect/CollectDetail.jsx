@@ -106,41 +106,41 @@ function Collect_Detail() {
           />
         </div>
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
       </div>
 
       {/* Body: Sidebar | Content | Ads */}
-      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
+      <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -148,7 +148,7 @@ function Collect_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-auto">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           {/* Collections */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">คอลเลคชันของคุณ</h2>
@@ -216,7 +216,7 @@ function Collect_Detail() {
                         )}
                         <p className="text-sm mt-2">{post.text}</p>
                         <button
-                          className="text-red-500 mt-2"
+                          className="text-red-500 mt-2 "
                           onClick={() => toggleSave(post.id)}>
                           ❌ ลบบันทึก
                         </button>
@@ -266,7 +266,7 @@ function Collect_Detail() {
                   ))}
                   <p>{post.text}</p>
                   <button
-                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300"
+                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300 cursor-pointer"
                     onClick={() => toggleSave(post.id)}
                   >
                     ❌ ลบบันทึก
@@ -277,7 +277,7 @@ function Collect_Detail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <h2>โฆษณา</h2>
         </div>
       </div>
