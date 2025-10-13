@@ -66,14 +66,10 @@ function LoginDetail() {
           />
 
           <div class="flex flex-row gap-90 text-sm mb-6">
-            <span class="text-[#000000] cursor-pointer hover:underline"
-            onClick={() => navigate("/sign-up")}
-            >
+            <span class="text-[#000000] cursor-pointer hover:underline">
               Sign up?
             </span>
-            <span class="text-[#000000] cursor-pointer hover:underline"
-            onClick={() => navigate("/reset-password")}
-            >
+            <span class="text-[#000000] cursor-pointer hover:underline">
               Forget Password?
             </span>
           </div>
