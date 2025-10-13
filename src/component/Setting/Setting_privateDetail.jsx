@@ -20,10 +20,10 @@ function Setting_privateDetail() {
         </div>
         {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button onClick={() => {}}>
+          <button className="cursor-pointer" onClick={() => {}}>
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -34,26 +34,26 @@ function Setting_privateDetail() {
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -67,22 +67,22 @@ function Setting_privateDetail() {
             <h1 className="font-bold text-xl mb-3">การตั้งค่า</h1>
             <h2 className="font-semibold text-xl mb-2">บัญชี</h2>
             <div className="flex flex-col gap-2">
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/setting")}
               >
                 ทั่วไป
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/settingaaccount")}
               >
                 สลับบัญชี
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/settingmessage")}
               >
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("")}
               >
                 ความเป็นส่วนตัว
@@ -90,10 +90,10 @@ function Setting_privateDetail() {
             </div>
             <h2 className="font-semibold mt-4 mb-2">ความเป็นส่วนตัวและนโยบาย</h2>
             <div className="flex flex-col gap-2">
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm">
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm">
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
                 ความเป็นส่วนตัว
               </button>
             </div>
@@ -109,12 +109,12 @@ function Setting_privateDetail() {
               <span className="text-base text-black">ปิด</span>
               <button
                 onClick={() => setFollowNotify(!followNotify)}
-                className={`w-14 h-7 rounded-full flex items-center transition-colors duration-300 ${
+                className={`w-14 h-7 rounded-full flex items-center transition-colors duration-300 cursor-pointer ${
                   followNotify ? "bg-green-500" : "bg-gray-400"
                 }`}
               >
                 <div
-                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 cursor-pointer ${
                     followNotify ? "translate-x-7" : "translate-x-0"
                   }`}
                 ></div>

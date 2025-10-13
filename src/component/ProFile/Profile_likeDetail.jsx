@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useState, useEffect } from "react";
 import { PostContext } from "../../context/PostContext";
 import {
   BsBell,
@@ -12,6 +12,23 @@ import { useNavigate } from "react-router-dom";
 function Profile_likeDetail() {
   const navigate = useNavigate();
   const { posts, toggleLike, toggleSave } = useContext(PostContext);
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const [aboutMe, setAboutMe] = useState("");
+  const [profileImg] = useState(
+    localStorage.getItem("profileImg") || "https://placekitten.com/200/200"
+  );
+
+  const handleAboutMeChange = (e) => {
+    setAboutMe(e.target.value);
+    localStorage.setItem("aboutMe", e.target.value);
+  };
+
+
+  useEffect(() => {
+    const savedAbout = localStorage.getItem("aboutMe") || "";
+    setAboutMe(savedAbout);
+  }, []);
 
   // ✅ กรองเฉพาะโพสต์ที่กดถูกใจ
   const likedPosts = posts.filter((post) => post.liked);
@@ -28,10 +45,10 @@ function Profile_likeDetail() {
           />
         </div>
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -75,15 +92,19 @@ function Profile_likeDetail() {
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
               <img
-                src="https://placekitten.com/200/200"
-                alt="profile"
+                src={profileImg}
                 className="w-full h-full object-cover"
               />
             </div>
             <div>
-              <h2 className="font-bold text-lg">user_name</h2>
+              <h2 className="font-bold text-lg">{user.username}</h2>
               <p className="text-sm">{likedPosts.length} ถูกใจ</p>
-              <p className="text-sm">about me.....</p>
+              <textarea
+                className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
+                placeholder="about me....."
+                value={aboutMe}
+                onChange={handleAboutMeChange}
+              />
             </div>
           </div>
 

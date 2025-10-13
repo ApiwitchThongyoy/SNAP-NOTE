@@ -78,10 +78,10 @@ function Profile_Detail() {
 
         {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -90,7 +90,7 @@ function Profile_Detail() {
       {/* Body */}
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
               className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
@@ -119,9 +119,8 @@ function Profile_Detail() {
           </button>
         </div>
 
-        {/* Content อีกที*/}
-        
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
+        {/* Content อีกที*/} 
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           {/* Profile Info แก้ตรงนี้*/}
 
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
@@ -248,7 +247,7 @@ function Profile_Detail() {
                           แก้ไข
                         </button>
                         <button
-                          className="px-3 py-1 bg-red-500 text-white rounded"
+                          className="px-3 py-1 bg-red-500 text-white rounded shadow-red-500/50 shadow-lg cursor-pointer hover:bg-red-600"
                           onClick={() => deletePost(index)}
                         >
                           ลบ
@@ -263,7 +262,7 @@ function Profile_Detail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <h2>โฆษณา</h2>
         </div>
       </div>

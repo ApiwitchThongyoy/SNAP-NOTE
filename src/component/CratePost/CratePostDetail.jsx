@@ -94,10 +94,10 @@ function CratePostDetail() {
 
         {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -108,19 +108,19 @@ function CratePostDetail() {
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 "
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer "
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
@@ -128,7 +128,7 @@ function CratePostDetail() {
           </div>
 
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -136,7 +136,7 @@ function CratePostDetail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#636363] p-6 rounded-xl">
+        <div className="w-3/5 bg-[#636363] p-6 rounded-xl cursor-pointer">
           <h2 className="text-xl font-bold mb-4">สร้างโพสต์</h2>
 
           <div className="bg-white text-black rounded-xl p-6">
@@ -151,7 +151,7 @@ function CratePostDetail() {
 
             <button
               onClick={handleCreatePost}
-              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer"
             >
               สร้างโพสต์
             </button>
