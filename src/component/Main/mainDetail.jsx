@@ -135,13 +135,13 @@ export default function MainDetail() {
                   {/* ปุ่ม Like, Save */}
                   <div className="flex gap-2 mt-2 flex-wrap">
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer shadow-red-500/50 shadow-lg"
                       onClick={() => toggleLike(index)}
                     >
                       {post.liked ? <BsHeartFill /> : <BsHeart />} {post.likes}
                     </button>
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer "
+                      className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
                       onClick={() => toggleSave(index)}
                     >
                       {post.saved ? <BsBookmarkFill /> : <BsBookmark />}

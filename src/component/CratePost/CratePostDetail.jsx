@@ -151,7 +151,7 @@ function CratePostDetail() {
 
             <button
               onClick={handleCreatePost}
-              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer"
+              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
             >
               สร้างโพสต์
             </button>

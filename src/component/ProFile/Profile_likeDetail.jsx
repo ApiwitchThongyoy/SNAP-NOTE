@@ -60,26 +60,26 @@ function Profile_likeDetail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -112,13 +112,13 @@ function Profile_likeDetail() {
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
               <button
-                className="text-gray-300"
+                className="text-gray-300 cursor-pointer"
                 onClick={() => navigate("/profile")}
               >
                 โพสต์
               </button>
               <button
-                className="border-b-2 border-green-500 font-semibold"
+                className="border-b-2 border-green-500 font-semibold cursor-pointer"
                 onClick={() => navigate("/profile-like")}
               >
                 ถูกใจ
@@ -163,13 +163,13 @@ function Profile_likeDetail() {
                     {/* ปุ่ม toggle */}
                     <div className="flex gap-2 mt-2">
                       <button
-                        className="px-3 py-1 bg-red-500 text-white rounded"
+                        className="px-3 py-1 bg-red-500 text-white rounded cursor-pointer shadow-red-500/50 shadow-lg hover:bg-red-600"
                         onClick={() => toggleLike(posts.indexOf(post))}
                       >
                         <BsHeartFill /> {post.likes}
                       </button>
                       <button
-                        className="px-3 py-1 bg-blue-500 text-white rounded"
+                        className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer shadow-blue-500/50 shadow-lg hover:bg-blue-600"
                         onClick={() => toggleSave(posts.indexOf(post))}
                       >
                         {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
