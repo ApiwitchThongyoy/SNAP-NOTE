@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
+import { AuthContext } from "../../context/AuthContext";
 
 function LoginDetail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   function handleEmailChange(e) {
     setEmail(e.target.value);
@@ -19,8 +21,10 @@ function LoginDetail() {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const found = users.find(u => u.email === email && u.password === password);
-    if (!found) {
-      alert("Welcome");
+    if (found) {
+      localStorage.setItem("user", JSON.stringify(found));
+      login({ username: found.username, email: found.email });
+      alert("Welcome" + found.username);
       setEmail("");
       setPassword("");
       navigate("/main-page");

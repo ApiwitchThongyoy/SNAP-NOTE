@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import { AuthContext } from "../../context/AuthContext";
 
 function SignUpDetail() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ function SignUpDetail() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   
 
  
@@ -58,10 +60,23 @@ function SignUpDetail() {
       return;
     }
 
-    localStorage.setItem("user", JSON.stringify({ 
-      username, 
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (users.find(u => u.email === email)) {
+      alert("อีเมลนี้ถูกใช้งานแล้ว!");
+      return;
+    }
+
+    const newUser = { username,
       email,
-    }));
+      password,
+      profileImg: "https://placekitten.com/200/200",
+      aboutMe: ""
+    };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("user", JSON.stringify(newUser));
+    login({ username, email });
     
 
     alert(`Sign Up Successful!\nUsername: ${username}\nEmail: ${email}`);

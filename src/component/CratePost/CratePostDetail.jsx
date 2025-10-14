@@ -2,6 +2,7 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
+import { AuthContext } from "../../context/AuthContext";
 
 // ✅ ปุ่มอัปโหลดไฟล์
 function UploadButtons({ handleFiles }) {
@@ -71,11 +72,15 @@ function CratePostDetail() {
   const navigate = useNavigate();
   const [postText, setPostText] = useState("");
   const [files, setFiles] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const authorName = user.username || "ผู้ใช้งาน";
 
   const handleFiles = (newFiles) => setFiles(newFiles);
 
   const handleCreatePost = () => {
-    addPost({ text: postText, files });
+    addPost({ text: postText,
+      files,
+      author: authorName,});
     navigate("/main-page");
   };
 
@@ -140,6 +145,7 @@ function CratePostDetail() {
           <h2 className="text-xl font-bold mb-4">สร้างโพสต์</h2>
 
           <div className="bg-white text-black rounded-xl p-6">
+            
             <UploadButtons handleFiles={handleFiles} />
 
             <textarea

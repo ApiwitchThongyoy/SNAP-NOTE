@@ -30,6 +30,10 @@ function Profile_Detail() {
   const handleAboutMeChange = (e) => {
     setAboutMe(e.target.value);
     localStorage.setItem("aboutMe", e.target.value);
+
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    user.aboutMe = e.target.value;
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   // กดแก้ไข
@@ -53,15 +57,19 @@ function Profile_Detail() {
 
   //เพิ่มฟังก์ชัน handleProfileImgChange
   const handleProfileImgChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setProfileImg(reader.result);
-    localStorage.setItem("profileImg", reader.result);
+    const file = e.target.files[0];
+    if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+      setProfileImg(reader.result);
+      localStorage.setItem("profileImg", reader.result);
+
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      user.profileImg = reader.result;
+      localStorage.setItem("user", JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">

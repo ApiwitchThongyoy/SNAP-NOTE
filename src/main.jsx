@@ -15,6 +15,8 @@ import Setting_message from './page/Setting_message.jsx';
 import Setting_private from './page/Setting_private.jsx';
 import './index.css';
 import { PostProvider } from './context/PostProvider.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -64,8 +66,10 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* ✅ ครอบ RouterProvider ด้วย PostProvider */}
-    <PostProvider>
-      <RouterProvider router={router} />
-    </PostProvider>
+    <AuthProvider>
+      <PostProvider>
+        <RouterProvider router={router} />
+      </PostProvider>
+    </AuthProvider>
   </StrictMode>
 );
