@@ -113,4 +113,4 @@ function LoginDetail() {
   );
 }
 
-export default LoginDetail;
+export default LoginDetail; //
