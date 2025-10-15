@@ -38,7 +38,7 @@ function LoginDetail() {
       setLoading(true);
 
       // ✅ เข้าสู่ระบบผ่าน Supabase Auth
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data , error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
