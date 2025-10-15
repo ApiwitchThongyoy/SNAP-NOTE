@@ -158,13 +158,13 @@ function Profile_Detail() {
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
               <button
-                className="border-b-2 border-green-500 font-semibold"
+                className="border-b-2 border-green-500 font-semibold cursor-pointer"
                 onClick={() => navigate("/profile")}
               >
                 โพสต์
               </button>
               <button
-                className="text-gray-300"
+                className="text-gray-300 cursor-pointer"
                 onClick={() => navigate("/profile-like")}
               >
                 ถูกใจ
@@ -197,13 +197,13 @@ function Profile_Detail() {
 
                       <div className="flex gap-2 mt-2">
                         <button
-                          className="px-4 py-2 bg-green-500 text-white rounded"
+                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
                           onClick={handleSaveEdit}
                         >
                           บันทึก
                         </button>
                         <button
-                          className="px-4 py-2 bg-gray-400 text-white rounded"
+                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer"
                           onClick={() => setEditIndex(null)}
                         >
                           ยกเลิก
@@ -241,7 +241,7 @@ function Profile_Detail() {
                       {/* Buttons */}
                       <div className="flex gap-2 mt-2">
                         <button
-                          className="px-3 py-1 bg-blue-500 text-white rounded"
+                          className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
                           onClick={() => handleEdit(index, post.text)}
                         >
                           แก้ไข
