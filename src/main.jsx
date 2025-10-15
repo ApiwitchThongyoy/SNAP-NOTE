@@ -59,6 +59,9 @@ const router = createBrowserRouter([
   },{
     path:"/settingprivate",
     element:<Setting_private/>
+  },{
+    path:"/verify-email",
+    element:<Verify-email/>
   }
 
 
