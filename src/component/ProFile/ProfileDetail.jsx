@@ -30,6 +30,10 @@ function Profile_Detail() {
   const handleAboutMeChange = (e) => {
     setAboutMe(e.target.value);
     localStorage.setItem("aboutMe", e.target.value);
+
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    user.aboutMe = e.target.value;
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   // กดแก้ไข
@@ -53,15 +57,19 @@ function Profile_Detail() {
 
   //เพิ่มฟังก์ชัน handleProfileImgChange
   const handleProfileImgChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setProfileImg(reader.result);
-    localStorage.setItem("profileImg", reader.result);
+    const file = e.target.files[0];
+    if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+      setProfileImg(reader.result);
+      localStorage.setItem("profileImg", reader.result);
+
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      user.profileImg = reader.result;
+      localStorage.setItem("user", JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -93,26 +101,26 @@ function Profile_Detail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -131,7 +139,7 @@ function Profile_Detail() {
                   className="w-full h-full object-cover"
                 />
             </div>
-            <label className="mt-2 w-28 text-sm cursor-pointer text-center">แก้ไขรูปภาพ
+            <label className="mt-2 w-28 text-sm cursor-pointer text-center ">แก้ไขรูปภาพ
               <input
 
                 type="file"
@@ -144,7 +152,7 @@ function Profile_Detail() {
             </div>
             <div>
               <h2 className="font-bold text-lg">{user.username}</h2>
-              <p className="text-sm">{posts.length} โพสต์</p>
+              <p className="text-sm ">{posts.length} โพสต์</p>
               <textarea
                 className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
                 placeholder="about me....."
@@ -197,13 +205,29 @@ function Profile_Detail() {
 
                       <div className="flex gap-2 mt-2">
                         <button
+<<<<<<< HEAD
+
+                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer shadow-green-500/50 shadow-lg hover:bg-green-600"
+
+                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
+
+=======
                           className="px-4 py-2 bg-green-500 text-white rounded"
+>>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={handleSaveEdit}
                         >
                           บันทึก
                         </button>
                         <button
+<<<<<<< HEAD
+
+                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer shadow-gray-400/50 shadow-lg hover:bg-gray-500"
+
+                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer"
+
+=======
                           className="px-4 py-2 bg-gray-400 text-white rounded"
+>>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={() => setEditIndex(null)}
                         >
                           ยกเลิก
@@ -241,7 +265,15 @@ function Profile_Detail() {
                       {/* Buttons */}
                       <div className="flex gap-2 mt-2">
                         <button
+<<<<<<< HEAD
+
+                          className="px-3 py-1 bg-blue-500 text-white rounded shadow-blue-500/50 shadow-lg cursor-pointer hover:bg-blue-600"
+
+                          className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
+
+=======
                           className="px-3 py-1 bg-blue-500 text-white rounded"
+>>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={() => handleEdit(index, post.text)}
                         >
                           แก้ไข
