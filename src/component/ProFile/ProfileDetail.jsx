@@ -205,29 +205,13 @@ function Profile_Detail() {
 
                       <div className="flex gap-2 mt-2">
                         <button
-<<<<<<< HEAD
-
-                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer shadow-green-500/50 shadow-lg hover:bg-green-600"
-
-                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
-
-=======
                           className="px-4 py-2 bg-green-500 text-white rounded"
->>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={handleSaveEdit}
                         >
                           บันทึก
                         </button>
                         <button
-<<<<<<< HEAD
-
-                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer shadow-gray-400/50 shadow-lg hover:bg-gray-500"
-
-                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer"
-
-=======
                           className="px-4 py-2 bg-gray-400 text-white rounded"
->>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={() => setEditIndex(null)}
                         >
                           ยกเลิก
@@ -265,15 +249,7 @@ function Profile_Detail() {
                       {/* Buttons */}
                       <div className="flex gap-2 mt-2">
                         <button
-<<<<<<< HEAD
-
-                          className="px-3 py-1 bg-blue-500 text-white rounded shadow-blue-500/50 shadow-lg cursor-pointer hover:bg-blue-600"
-
-                          className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
-
-=======
                           className="px-3 py-1 bg-blue-500 text-white rounded"
->>>>>>> parent of 3e38c30 (ปรับแต่งปุ่ม button และเพิ่มเติมอะไรนิดหน่อย)
                           onClick={() => handleEdit(index, post.text)}
                         >
                           แก้ไข

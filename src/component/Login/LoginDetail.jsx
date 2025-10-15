@@ -82,7 +82,7 @@ function LoginDetail() {
           />
 
           {/* ลิงก์ไปยังหน้า Sign Up / Reset Password */}
-          <div className="flex flex-row justify-between text-sm mb-6">
+          <div className="flex flex-row gap-95 text-sm mb-6">
             <span
               className="text-[#000000] cursor-pointer hover:underline"
               onClick={() => navigate("/sign-up")}

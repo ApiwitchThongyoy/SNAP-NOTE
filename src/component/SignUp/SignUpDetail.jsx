@@ -1,12 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
-<<<<<<< HEAD
-import { AuthContext } from "../../context/AuthContext";
-=======
-import { supabase } from "../../supabaseClient"; // ✅ เพิ่มการเชื่อมต่อ Supabase
->>>>>>> parent of 30aaee7 (ทำให้บันทึกข้อมูล sing up และ การตรวจสอบอีเมลก่อนเข้าสู่ระบบ)
+import { supabase } from "../../supabaseClient";
 
 function SignUpDetail() {
   const [username, setUsername] = useState("");
@@ -17,15 +13,6 @@ function SignUpDetail() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  const { login } = useContext(AuthContext);
-  
-
-
-
-  const handleSubmit = async (e) => {
-=======
-  // ✅ ฟังก์ชันขอ OTP (จำลอง)
   function handleRequestOtp() {
     if (!email) {
       alert("กรุณากรอกอีเมลก่อนรับ OTP");
@@ -42,9 +29,7 @@ function SignUpDetail() {
     alert(`รหัส OTP ของคุณคือ: ${newOtp}`);
   }
 
-  // ✅ ฟังก์ชันสมัครสมาชิก
   async function handleSubmit(e) {
->>>>>>> parent of 30aaee7 (ทำให้บันทึกข้อมูล sing up และ การตรวจสอบอีเมลก่อนเข้าสู่ระบบ)
     e.preventDefault();
 
     if (!username || !email || !otp || !password || !confirmPassword) {
@@ -52,39 +37,6 @@ function SignUpDetail() {
       return;
     }
 
-<<<<<<< HEAD
-
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    if (users.find(u => u.email === email)) {
-      alert("อีเมลนี้ถูกใช้งานแล้ว!");
-      return;
-    }
-
-    const newUser = { username,
-      email,
-      password,
-      profileImg: "https://placekitten.com/200/200",
-      aboutMe: ""
-    };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("user", JSON.stringify(newUser));
-    login({ username, email });
-    
-
-    alert(`Sign Up Successful!\nUsername: ${username}\nEmail: ${email}`);
-
-
-    const {  error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username },
-        emailRedirectTo: "http://localhost:5173/verify-email",
-      },
-    });
-=======
     if (!email.includes("@")) {
       alert("กรุณาใส่อีเมลที่ถูกต้อง");
       return;
@@ -100,31 +52,20 @@ function SignUpDetail() {
       return;
     }
 
-    // ✅ บันทึกข้อมูลลง Supabase
     const { data, error } = await supabase
       .from("users")
       .insert([
-        {
-          username: username,
-          email: email,
-          password: password,
-        },
+        { username, email, password }
       ]);
->>>>>>> parent of 30aaee7 (ทำให้บันทึกข้อมูล sing up และ การตรวจสอบอีเมลก่อนเข้าสู่ระบบ)
 
     if (error) {
       console.error(error);
       alert("เกิดข้อผิดพลาดในการสมัครสมาชิก!");
       return;
     }
-    console.log("สมัครสมาชิกสำเร็จ!\nUsername: ${username}\nEmail: ${email}", data);
 
-<<<<<<< HEAD
+    console.log(`สมัครสมาชิกสำเร็จ!\nUsername: ${username}\nEmail: ${email}`, data);
 
-    alert("สมัครสมาชิกสำเร็จ! 🎉 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ");
-=======
-    // ✅ ล้างค่า input
->>>>>>> parent of 30aaee7 (ทำให้บันทึกข้อมูล sing up และ การตรวจสอบอีเมลก่อนเข้าสู่ระบบ)
     setUsername("");
     setEmail("");
     setOtp("");
@@ -137,14 +78,12 @@ function SignUpDetail() {
 
   return (
     <div className="relative flex min-h-screen bg-[#56A750]">
-      <div>
-        <button
-          className="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50"
-          onClick={() => navigate(-1)}
-        >
-          <BsArrowLeftCircleFill />
-        </button>
-      </div>
+      <button
+        className="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50"
+        onClick={() => navigate(-1)}
+      >
+        <BsArrowLeftCircleFill />
+      </button>
 
       <div className="absolute left-0 top-0 h-full">
         <img
@@ -167,7 +106,7 @@ function SignUpDetail() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your Username"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              className="max-w-[550px] w-full p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -179,7 +118,7 @@ function SignUpDetail() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your Email"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              className="max-w-[550px] w-full p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -188,7 +127,7 @@ function SignUpDetail() {
               type="button"
               onClick={handleRequestOtp}
               disabled={!email}
-              className={`w-[550px] bg-[#164C11] text-white py-3 rounded font-bold mb-4 transition-colors ${
+              className={`max-w-[550px] w-full bg-[#164C11] text-white py-3 rounded font-bold mb-4 transition-colors ${
                 !email
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:bg-green-600"
@@ -207,7 +146,7 @@ function SignUpDetail() {
               placeholder="Enter 6-digit OTP"
               maxLength={6}
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              className="max-w-[550px] w-full p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -219,7 +158,7 @@ function SignUpDetail() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your Password"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              className="max-w-[550px] w-full p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
@@ -231,13 +170,13 @@ function SignUpDetail() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your Password"
               required
-              className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+              className="max-w-[550px] w-full p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
             />
           </div>
 
           <button
             type="submit"
-            className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
+            className="max-w-[550px] w-full bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
           >
             Sign Up
           </button>
