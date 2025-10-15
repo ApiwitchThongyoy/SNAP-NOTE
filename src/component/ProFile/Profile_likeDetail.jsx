@@ -112,13 +112,13 @@ function Profile_likeDetail() {
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
               <button
-                className="text-gray-300 cursor-pointer"
+                className="text-gray-300"
                 onClick={() => navigate("/profile")}
               >
                 โพสต์
               </button>
               <button
-                className="border-b-2 border-green-500 font-semibold cursor-pointer"
+                className="border-b-2 border-green-500 font-semibold"
                 onClick={() => navigate("/profile-like")}
               >
                 ถูกใจ

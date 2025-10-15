@@ -32,7 +32,7 @@ function UploadButtons({ handleFiles }) {
   return (
     <div>
       <label className="bg-gradient-to-r from-red-400 to-red-600 text-white px-6 py-3 rounded-full cursor-pointer hover:shadow-lg transition">
-        เพิ่มไฟล์
+        ✨ เพิ่มไฟล์สวยๆ
         <input
           type="file"
           multiple
@@ -53,7 +53,7 @@ function UploadButtons({ handleFiles }) {
                 {file.name} ({formatFileSize(file.size)})
               </span>
               <button
-                className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 cursor-pointer"
+                className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
                 onClick={() => removeFile(index)}
               >
                 ลบ

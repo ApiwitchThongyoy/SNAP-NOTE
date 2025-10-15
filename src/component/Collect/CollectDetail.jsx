@@ -172,7 +172,7 @@ function Collect_Detail() {
                   <div className="flex justify-between items-center">
                     <h3 className="font-bold">{col.name}</h3>
                     <button
-                      className="text-red-500 cursor-pointer"
+                      className="text-red-500"
                       onClick={() =>
                         setDeleteConfirm({ type: "collection", id: col.id })
                       }
@@ -216,7 +216,7 @@ function Collect_Detail() {
                         )}
                         <p className="text-sm mt-2">{post.text}</p>
                         <button
-                          className="text-red-500 mt-2 cursor-pointer "
+                          className="text-red-500 mt-2 "
                           onClick={() => toggleSave(post.id)}>
                           ❌ ลบบันทึก
                         </button>
@@ -310,13 +310,13 @@ function Collect_Detail() {
             </div>
             <div className="flex gap-4 justify-end">
               <button
-                className="bg-gray-400 px-4 py-2 rounded cursor-pointer"
+                className="bg-gray-400 px-4 py-2 rounded"
                 onClick={() => setShowCreateModal(false)}
               >
                 ยกเลิก
               </button>
               <button
-                className="bg-green-500 px-4 py-2 rounded text-white cursor-pointer"
+                className="bg-green-500 px-4 py-2 rounded text-white"
                 onClick={handleCreateCollection}
               >
                 ยืนยัน
@@ -333,13 +333,13 @@ function Collect_Detail() {
             <p className="mb-4">คุณต้องการลบคอลเลคชันนี้ใช่หรือไม่?</p>
             <div className="flex gap-4 justify-end">
               <button
-                className="bg-gray-400 px-4 py-2 rounded cursor-pointer"
+                className="bg-gray-400 px-4 py-2 rounded"
                 onClick={() => setDeleteConfirm(null)}
               >
                 ยกเลิก
               </button>
               <button
-                className="bg-red-500 px-4 py-2 rounded text-white cursor-pointer"
+                className="bg-red-500 px-4 py-2 rounded text-white"
                 onClick={() => handleDeleteCollection(deleteConfirm.id)}
               >
                 ยืนยัน
