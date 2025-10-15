@@ -109,7 +109,9 @@ function Setting_accountDetail() {
             <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm mb-2 cursor-pointer">
               + เพิ่มบัญชี
             </button>
-            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
+            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
+            onClick={() => navigate("/")}
+            >
               จัดการบัญชี
             </button>
           </div>
