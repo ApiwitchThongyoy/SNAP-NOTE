@@ -1,18 +1,13 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
-
-import { AuthContext } from "../../context/AuthContext";
-
 import { supabase } from "../../supabaseClient";
-
 
 function LoginDetail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,18 +16,6 @@ function LoginDetail() {
       alert("กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน");
       return;
     }
-
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const found = users.find(u => u.email === email && u.password === password);
-    if (found) {
-      localStorage.setItem("user", JSON.stringify(found));
-      login({ username: found.username, email: found.email });
-      alert("Welcome" + found.username);
-      setEmail("");
-      setPassword("");
 
     try {
       setLoading(true);
@@ -51,7 +34,6 @@ function LoginDetail() {
       // ✅ ถ้าสำเร็จ จะมี session และข้อมูล user
       console.log("User:", data.user);
       alert("เข้าสู่ระบบสำเร็จ 🎉");
-
       navigate("/main-page");
     } catch (err) {
       console.error("Login Error:", err.message);
@@ -100,7 +82,7 @@ function LoginDetail() {
           />
 
           {/* ลิงก์ไปยังหน้า Sign Up / Reset Password */}
-          <div className="flex flex-row gap-95 text-sm mb-6 ">
+          <div className="flex flex-row justify-between text-sm mb-6">
             <span
               className="text-[#000000] cursor-pointer hover:underline"
               onClick={() => navigate("/sign-up")}
