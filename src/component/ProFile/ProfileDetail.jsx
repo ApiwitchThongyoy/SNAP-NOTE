@@ -205,13 +205,21 @@ function Profile_Detail() {
 
                       <div className="flex gap-2 mt-2">
                         <button
+
                           className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer shadow-green-500/50 shadow-lg hover:bg-green-600"
+
+                          className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer"
+
                           onClick={handleSaveEdit}
                         >
                           บันทึก
                         </button>
                         <button
+
                           className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer shadow-gray-400/50 shadow-lg hover:bg-gray-500"
+
+                          className="px-4 py-2 bg-gray-400 text-white rounded cursor-pointer"
+
                           onClick={() => setEditIndex(null)}
                         >
                           ยกเลิก
@@ -249,7 +257,11 @@ function Profile_Detail() {
                       {/* Buttons */}
                       <div className="flex gap-2 mt-2">
                         <button
+
                           className="px-3 py-1 bg-blue-500 text-white rounded shadow-blue-500/50 shadow-lg cursor-pointer hover:bg-blue-600"
+
+                          className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
+
                           onClick={() => handleEdit(index, post.text)}
                         >
                           แก้ไข
