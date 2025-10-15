@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
 import { AuthContext } from "../../context/AuthContext";
+import AdCarousel from "../Ads/AdsDetail";
 
 // ✅ ปุ่มอัปโหลดไฟล์
 function UploadButtons({ handleFiles }) {
@@ -166,7 +167,7 @@ function CratePostDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import AdCarousel from "../Ads/AdsDetail";
 
 function SettingDetail() {
   const navigate = useNavigate();
@@ -108,7 +109,7 @@ function SettingDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

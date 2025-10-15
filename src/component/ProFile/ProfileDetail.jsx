@@ -2,6 +2,7 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
 import { useState, useEffect } from "react";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Profile_Detail() {
   //ตัวอย่างในโปรไฟล์
@@ -271,7 +272,7 @@ function Profile_Detail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

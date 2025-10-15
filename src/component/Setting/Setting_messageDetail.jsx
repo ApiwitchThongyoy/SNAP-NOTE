@@ -1,6 +1,7 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Setting_messageDetail() {
   const [followNotify, setFollowNotify] = useState(false);
@@ -126,7 +127,7 @@ function Setting_messageDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>
