@@ -13,8 +13,13 @@ export function PostProvider({ children }) {
   }, [posts]);
 
   // ✅ เพิ่มโพสต์ใหม่
+
+  const addPost = async ({ text, files, author = "ผู้ใช้งาน" }) => {
+    const filePromises = files.map(async(file) => ({
+
   const addPost = ({ text, files }) => {
     const fileURLs = files.map((file) => ({
+
       name: file.name,
       url: URL.createObjectURL(file),
       type: file.type,
@@ -27,6 +32,14 @@ export function PostProvider({ children }) {
       liked: false,   // ✅ ใช้ควบคุมกดถูกใจ/เลิกถูกใจ
       comments: [],
       saved: false,
+      author: author,
+      timestamp: new Date().toLocaleString('th-TH', { 
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit'
+      })
     };
 
     setPosts((prev) => [...prev, newPost]);

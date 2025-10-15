@@ -81,6 +81,18 @@ export default function MainDetail() {
                   key={index}
                   className="bg-white text-black rounded-lg p-4 shadow w-full flex flex-col gap-3"
                 >
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
+                    <BsPersonCircle size={40} className="text-gray-600" />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-base">
+                        {post.author || "ผู้ใช้งาน"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {post.timestamp || "เมื่อสักครู่"}
+                      </span>
+                    </div>
+                  </div>
+
                   {/* เนื้อหาโพสต์ */}
                   <p className="mb-2 text-base">{post.text}</p>
 
@@ -135,13 +147,13 @@ export default function MainDetail() {
                   {/* ปุ่ม Like, Save */}
                   <div className="flex gap-2 mt-2 flex-wrap">
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer shadow-red-500/50 shadow-lg"
                       onClick={() => toggleLike(index)}
                     >
                       {post.liked ? <BsHeartFill /> : <BsHeart />} {post.likes}
                     </button>
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer "
+                      className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
                       onClick={() => toggleSave(index)}
                     >
                       {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
