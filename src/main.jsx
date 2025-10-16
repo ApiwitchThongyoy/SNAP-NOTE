@@ -16,6 +16,8 @@ import Setting_private from './page/Setting_private.jsx';
 import './index.css';
 import { PostProvider } from './context/PostProvider.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import VerifyEmail from './component/SignUp/VerifyEmail.jsx'
+import UpdatePassword from './component/Resetpassword/UpdatePassword.jsx';
 
 const router = createBrowserRouter([
   {
@@ -61,9 +63,11 @@ const router = createBrowserRouter([
     element:<Setting_private/>
   },{
     path:"/verify-email",
-    element:<Verify-email/>
-  }
-
+    element:<VerifyEmail/>
+  },{
+  path: "/update-password",
+  element: <UpdatePassword />
+}
 
 ])
 createRoot(document.getElementById('root')).render(
