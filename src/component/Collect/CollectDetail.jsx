@@ -118,7 +118,7 @@ function Collect_Detail() {
       {/* Body: Sidebar | Content | Ads */}
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
               className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
@@ -148,7 +148,7 @@ function Collect_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-auto">
+        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           {/* Collections */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">คอลเลคชันของคุณ</h2>
@@ -277,7 +277,7 @@ function Collect_Detail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <h2>โฆษณา</h2>
         </div>
       </div>

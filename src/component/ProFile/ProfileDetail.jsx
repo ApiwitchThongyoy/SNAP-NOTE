@@ -121,7 +121,7 @@ function Profile_Detail() {
 
         {/* Content อีกที*/}
         
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
+        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           {/* Profile Info แก้ตรงนี้*/}
 
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
@@ -263,7 +263,7 @@ function Profile_Detail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <h2>โฆษณา</h2>
         </div>
       </div>
