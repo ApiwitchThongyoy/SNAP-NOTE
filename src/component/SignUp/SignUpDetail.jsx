@@ -95,20 +95,12 @@ function SignUpDetail() {
       // Do not navigate yet, as the user needs to verify their email
     }
     
-    // The original logic here was to clear the fields and navigate, but 
-    // based on the alert, the user needs to verify email first. 
-    // I've kept the alert and removed the field clearing/navigation
-    // to match the success message flow (user stays on page or is redirected 
-    // to a 'check your email' page).
-    // If you intended to clear the form after success AND tell the user to check email, 
-    // then move the field clearing here:
     setUsername("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
-    // If you want to navigate *after* a successful sign-up that requires email verification, 
-    // you should navigate to a dedicated page that instructs the user to check their email.
-    navigate("/verify-email-info"); // Example: navigate to an information page
+
+    navigate("/");
   };
 
   return (
