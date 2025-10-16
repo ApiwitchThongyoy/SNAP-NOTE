@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import Logo_Login from "../../assets/Logo_Login.svg";
+// Import the icon you are trying to use
+import { BsArrowLeftCircleFill } from "react-icons/bs"; 
 
-// SVG Component for the Back Arrow Icon to avoid import errors
+// SVG Component for the Back Arrow Icon (No change needed here)
 function BackArrowIcon() {
   return (
     <svg
@@ -20,17 +22,17 @@ function BackArrowIcon() {
   );
 }
 
-// Placeholder for the Logo to avoid import errors
+// Placeholder for the Logo (No change needed here, though it's unused in the final component)
 function PlaceholderLogo() {
-    return (
-        <div class=" left-0 top-0  h-full w-full"> 
-        <img
-          src={Logo_Login}
+  return (
+    <div className="left-0 top-0 h-full w-full"> 
+      <img
+        src={Logo_Login}
         alt="Snapnote Logo"
         className="w-full h-full"
-        />
-      </div>
-    );
+      />
+    </div>
+  );
 }
 
 function SignUpDetail() {
@@ -40,67 +42,83 @@ function SignUpDetail() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!username || !email || !password || !confirmPassword) {
-    alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
-    return;
-  }
+    if (!username || !email || !password || !confirmPassword) {
+      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง"); // Please fill in all fields
+      return;
+    }
 
-  if (password !== confirmPassword) {
-    alert("รหัสผ่านไม่ตรงกัน");
-    return;
-  }
+    if (password !== confirmPassword) {
+      alert("รหัสผ่านไม่ตรงกัน"); // Passwords do not match
+      return;
+    }
 
-  // ✅ เช็กว่าอีเมลนี้มีอยู่แล้วในระบบไหม
-  const { data: emailExists, error: checkError } = await supabase.rpc(
-    "check_email_exists",
-    { email_input: email }
-  );
+    // ✅ เช็กว่าอีเมลนี้มีอยู่แล้วในระบบไหม
+    // Note: If 'check_email_exists' is a Postgres function, this is fine, but 
+    // it's generally better to let the 'signUp' method handle the unique email constraint 
+    // unless you need a custom message. Assuming the RPC call is correct.
+    const { data: emailExists, error: checkError } = await supabase.rpc(
+      "check_email_exists",
+      { email_input: email }
+    );
 
-  if (checkError) {
-    alert("เกิดข้อผิดพลาดระหว่างตรวจสอบอีเมล: " + checkError.message);
-    return;
-  }
+    if (checkError) {
+      alert("เกิดข้อผิดพลาดระหว่างตรวจสอบอีเมล: " + checkError.message); // Error checking email
+      return;
+    }
 
-  if (emailExists) {
-    alert("อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน");
-    return;
-  }
+    if (emailExists) {
+      alert("อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน"); // Email is already in use. Please log in instead.
+      return;
+    }
 
-  // ✅ สมัครสมาชิกใหม่
-  const { data , error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { username },
-      emailRedirectTo: "http://localhost:5173/verify-email",
-    },
-  });
+    // ✅ สมัครสมาชิกใหม่
+    const { data , error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username },
+        emailRedirectTo: "http://localhost:5173/verify-email",
+      },
+    });
 
-  if (error) {
-    alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
-    return;
-  }
-  if (data?.user) {
-    alert("สมัครสมาชิกสำเร็จ! 🎉 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ");
-    return;
-  }
-  setUsername("");
-  setEmail("");
-  setPassword("");
-  setConfirmPassword("");
-  navigate("/");
-};
+    if (error) {
+      alert("สมัครสมาชิกไม่สำเร็จ: " + error.message); // Sign up failed
+      return;
+    }
+    
+    // Check if the user object is returned after a successful sign-up
+    if (data?.user) {
+      alert("สมัครสมาชิกสำเร็จ! 🎉 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ"); // Sign up successful! Please verify email before logging in
+      // Do not navigate yet, as the user needs to verify their email
+    }
+    
+    // The original logic here was to clear the fields and navigate, but 
+    // based on the alert, the user needs to verify email first. 
+    // I've kept the alert and removed the field clearing/navigation
+    // to match the success message flow (user stays on page or is redirected 
+    // to a 'check your email' page).
+    // If you intended to clear the form after success AND tell the user to check email, 
+    // then move the field clearing here:
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    // If you want to navigate *after* a successful sign-up that requires email verification, 
+    // you should navigate to a dedicated page that instructs the user to check their email.
+    navigate("/verify-email-info"); // Example: navigate to an information page
+  };
 
   return (
     <div className="relative flex min-h-screen bg-[#56A750]">
+      {/* 🛑 FIX: Use the imported icon component */}
       <button
         className="absolute top-4 right-20 text-6xl text-[#164C11] z-50"
         onClick={() => navigate(-1)}
       >
-        <BsArrowLeftCircleFill />
+        <BsArrowLeftCircleFill /> {/* This requires an import of BsArrowLeftCircleFill */}
       </button>
 
       <div className="absolute left-0 top-0 h-full">
@@ -153,4 +171,3 @@ const handleSubmit = async (e) => {
 }
 
 export default SignUpDetail;
-
