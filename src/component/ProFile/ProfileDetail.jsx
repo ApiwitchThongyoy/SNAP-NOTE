@@ -2,6 +2,7 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
 import { useState, useEffect } from "react";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Profile_Detail() {
   //ตัวอย่างในโปรไฟล์
@@ -30,6 +31,10 @@ function Profile_Detail() {
   const handleAboutMeChange = (e) => {
     setAboutMe(e.target.value);
     localStorage.setItem("aboutMe", e.target.value);
+
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    user.aboutMe = e.target.value;
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   // กดแก้ไข
@@ -53,15 +58,19 @@ function Profile_Detail() {
 
   //เพิ่มฟังก์ชัน handleProfileImgChange
   const handleProfileImgChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setProfileImg(reader.result);
-    localStorage.setItem("profileImg", reader.result);
+    const file = e.target.files[0];
+    if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+      setProfileImg(reader.result);
+      localStorage.setItem("profileImg", reader.result);
+
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      user.profileImg = reader.result;
+      localStorage.setItem("user", JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -90,7 +99,7 @@ function Profile_Detail() {
       {/* Body */}
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
               className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
@@ -119,9 +128,8 @@ function Profile_Detail() {
           </button>
         </div>
 
-        {/* Content อีกที*/}
-        
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        {/* Content อีกที*/} 
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           {/* Profile Info แก้ตรงนี้*/}
 
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
@@ -132,7 +140,7 @@ function Profile_Detail() {
                   className="w-full h-full object-cover"
                 />
             </div>
-            <label className="mt-2 w-28 text-sm cursor-pointer text-center">แก้ไขรูปภาพ
+            <label className="mt-2 w-28 text-sm cursor-pointer text-center ">แก้ไขรูปภาพ
               <input
 
                 type="file"
@@ -248,7 +256,7 @@ function Profile_Detail() {
                           แก้ไข
                         </button>
                         <button
-                          className="px-3 py-1 bg-red-500 text-white hover:bg-red-600 rounded cursor-pointer"
+                          className="px-3 py-1 bg-red-500 text-white rounded shadow-red-500/50 shadow-lg cursor-pointer hover:bg-red-600"
                           onClick={() => deletePost(index)}
                         >
                           ลบ
@@ -264,7 +272,7 @@ function Profile_Detail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

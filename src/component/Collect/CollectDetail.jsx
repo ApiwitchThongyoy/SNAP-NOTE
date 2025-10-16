@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
+import AdCarousel from "../Ads/AdsDetail";
 
 // แปลงไฟล์เป็น Base64
 const toBase64 = (url, type) =>
@@ -116,7 +117,7 @@ function Collect_Detail() {
       </div>
 
       {/* Body: Sidebar | Content | Ads */}
-      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
+      <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
@@ -148,7 +149,7 @@ function Collect_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           {/* Collections */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">คอลเลคชันของคุณ</h2>
@@ -216,7 +217,7 @@ function Collect_Detail() {
                         )}
                         <p className="text-sm mt-2">{post.text}</p>
                         <button
-                          className="text-red-500 mt-2"
+                          className="text-red-500 mt-2 "
                           onClick={() => toggleSave(post.id)}>
                           ❌ ลบบันทึก
                         </button>
@@ -278,7 +279,7 @@ function Collect_Detail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
 

@@ -2,6 +2,8 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "../../context/usePosts";
+import { AuthContext } from "../../context/AuthContext";
+import AdCarousel from "../Ads/AdsDetail";
 
 // ✅ ปุ่มอัปโหลดไฟล์
 function UploadButtons({ handleFiles }) {
@@ -71,11 +73,15 @@ function CratePostDetail() {
   const navigate = useNavigate();
   const [postText, setPostText] = useState("");
   const [files, setFiles] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const authorName = user.username || "ผู้ใช้งาน";
 
   const handleFiles = (newFiles) => setFiles(newFiles);
 
   const handleCreatePost = () => {
-    addPost({ text: postText, files });
+    addPost({ text: postText,
+      files,
+      author: authorName,});
     navigate("/main-page");
   };
 
@@ -120,7 +126,7 @@ function CratePostDetail() {
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer "
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
@@ -136,10 +142,11 @@ function CratePostDetail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#636363] p-6 rounded-xl cursor-pointer">
           <h2 className="text-xl font-bold mb-4">สร้างโพสต์</h2>
 
           <div className="bg-white text-black rounded-xl p-6">
+            
             <UploadButtons handleFiles={handleFiles} />
 
             <textarea
@@ -151,7 +158,7 @@ function CratePostDetail() {
 
             <button
               onClick={handleCreatePost}
-              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer"
+              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
             >
               สร้างโพสต์
             </button>
@@ -159,8 +166,8 @@ function CratePostDetail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <h2>โฆษณา</h2>
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+          <AdCarousel/>
         </div>
       </div>
     </div>

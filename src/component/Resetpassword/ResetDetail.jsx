@@ -2,156 +2,81 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo_Login from "../../assets/Logo_Login.svg";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import { supabase } from "../../supabaseClient";
 
 function ResetPassword() {
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [generatedOtp, setGeneratedOtp] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const navigate = useNavigate();
 
-  function handleRequestOtp() {
-    if (!email) {
-      alert("กรุณากรอก Email ก่อนขอ OTP");
-      return;
-    }
-
-    if (!email.includes("@")) {
-      alert("กรุณากรอก Email ให้ถูกต้อง (ต้องมี @)");
-      return;
-    }
-
-    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedOtp(newOtp);
-    alert(`OTP ของคุณคือ: ${newOtp}`);
-  }
-
-  function handleSubmit(e) {
+  async function handleResetRequest(e) {
     e.preventDefault();
 
-    if (!/^\d{6}$/.test(otp)) {
-      alert("กรุณากรอก OTP 6 หลักให้ถูกต้อง");
+    if (!email.includes("@")) {
+      alert("กรุณากรอกอีเมลให้ถูกต้อง (ต้องมี @)");
       return;
     }
 
-    if (otp !== generatedOtp) {
-      alert("OTP ไม่ถูกต้อง");
-      return;
+    setIsSending(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "http://localhost:5173/update-password", // หน้าที่ให้ผู้ใช้ตั้งรหัสใหม่
+    });
+
+    setIsSending(false);
+
+    if (error) {
+      alert("ไม่สามารถส่งลิงก์รีเซ็ตรหัสผ่านได้: " + error.message);
+    } else {
+      alert("ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว");
+      navigate("/");
     }
-
-    if (newPassword !== confirmPassword) {
-      alert("รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน");
-      return;
-    }
-
-    alert(`รีเซ็ตรหัสผ่านสำเร็จ!\nEmail: ${email}`);
-
-    setEmail("");
-    setOtp("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setGeneratedOtp("");
-    navigate("/main-page");
   }
 
   return (
-    <div class="relative flex min-h-screen bg-[#56A750]">
-      <div>
-        <button 
+    <div className="relative flex min-h-screen bg-[#56A750]">
+      <button
         type="button"
         className="absolute top-4 right-20 text-6xl text-[#164C11] cursor-pointer z-50"
         onClick={() => navigate("/")}
-        >
-          <BsArrowLeftCircleFill />
-        </button>
-      </div>
+      >
+        <BsArrowLeftCircleFill />
+      </button>
 
-      <div class="absolute left-0 top-0 h-full">
+      <div className="absolute left-0 top-0 h-full">
         <img
           src={Logo_Login}
           alt="left-side"
-          class="w-full h-full object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div class="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
-        <h1 class="text-3xl font-bold mb-6 text-start text-xxl text-[#164C11]">
+      <div className="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
+        <h1 className="text-3xl font-bold mb-6 text-start text-[#164C11]">
           Reset Password
         </h1>
 
-        <form onSubmit={handleSubmit} class="flex flex-col">
-          <div>
-            Email
-            <br />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your E-mail"
-              required
-              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
-            />
-          </div>
-
-          <div>
-            <button
-              type="button"
-              onClick={handleRequestOtp}
-              disabled={!email}
-              class={`w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors font-bold mb-4 ${
-                !email ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-              }`}
-            >
-              รับรหัส OTP
-            </button>
-          </div>
-
-          <div>
-            OTP
-            <br />
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              placeholder="Enter 6-digit OTP"
-              maxLength={6}
-              required
-              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
-            />
-          </div>
-
-          <div>
-            New Password
-            <br />
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Create New Password"
-              required
-              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
-            />
-          </div>
-
-          <div>
-            Confirm Password
-            <br />
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your Password"
-              required
-              class="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
-            />
-          </div>
+        <form onSubmit={handleResetRequest} className="flex flex-col">
+          <label className="mb-2 font-medium">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your E-mail"
+            required
+            className="w-[550px] p-3 border rounded mb-4 text-sm bg-[#BDFFA7]"
+          />
 
           <button
             type="submit"
-            class="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 transition-colors cursor-pointer font-bold"
+            disabled={isSending}
+            className={`w-[550px] bg-[#164C11] text-white py-3 rounded font-bold transition-colors ${
+              isSending
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-green-600 cursor-pointer"
+            }`}
           >
-            Reset
+            {isSending ? "กำลังส่ง..." : "ส่งลิงก์รีเซ็ตรหัสผ่าน"}
           </button>
         </form>
       </div>

@@ -1,5 +1,6 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Setting_accountDetail() {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ function Setting_accountDetail() {
             <p className="mb-2 text-lg">account 2</p>
             <p className="mb-2 text-lg">account 3</p>
             <p className="mb-2 text-lg">account 4</p>
-            <h1 className="font-bold text-lg mb-2">เกี่ยวกับบัญชี</h1>
+            <h1 className="font-bold text-lg mb-2 ">เกี่ยวกับบัญชี</h1>
             <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm mb-2 cursor-pointer">
               + เพิ่มบัญชี
             </button>
@@ -117,7 +118,7 @@ function Setting_accountDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

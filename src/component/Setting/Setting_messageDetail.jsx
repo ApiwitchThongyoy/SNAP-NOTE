@@ -1,6 +1,7 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Setting_messageDetail() {
   const [followNotify, setFollowNotify] = useState(false);
@@ -105,7 +106,7 @@ function Setting_messageDetail() {
             <p className="mb-5 text-lg">
               แจ้งให้ทราบเมื่อมีคนมาติดตาม
             </p>
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-5 ">
               <span className="text-base text-black">ปิด</span>
               <button
                 onClick={() => setFollowNotify(!followNotify)}
@@ -114,8 +115,8 @@ function Setting_messageDetail() {
                 }`}
               >
                 <div
-                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 cursor-pointer ${
-                    followNotify ? "translate-x-7" : "translate-x-0"
+                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                    followNotify ? "translate-x-7" : "translate-x-0 cursor-pointer"
                   }`}
                 ></div>
               </button>
@@ -126,7 +127,7 @@ function Setting_messageDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <h2>โฆษณา</h2>
+          <AdCarousel/>
         </div>
       </div>
     </div>

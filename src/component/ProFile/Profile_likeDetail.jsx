@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useState, useEffect } from "react";
 import { PostContext } from "../../context/PostContext";
 import {
   BsBell,
@@ -8,10 +8,28 @@ import {
   BsBookmarkFill,
 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import AdCarousel from "../Ads/AdsDetail";
 
 function Profile_likeDetail() {
   const navigate = useNavigate();
   const { posts, toggleLike, toggleSave } = useContext(PostContext);
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const [aboutMe, setAboutMe] = useState("");
+  const [profileImg] = useState(
+    localStorage.getItem("profileImg") || "https://placekitten.com/200/200"
+  );
+
+  const handleAboutMeChange = (e) => {
+    setAboutMe(e.target.value);
+    localStorage.setItem("aboutMe", e.target.value);
+  };
+
+
+  useEffect(() => {
+    const savedAbout = localStorage.getItem("aboutMe") || "";
+    setAboutMe(savedAbout);
+  }, []);
 
   // ✅ กรองเฉพาะโพสต์ที่กดถูกใจ
   const likedPosts = posts.filter((post) => post.liked);
@@ -75,15 +93,19 @@ function Profile_likeDetail() {
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
               <img
-                src="https://placekitten.com/200/200"
-                alt="profile"
+                src={profileImg}
                 className="w-full h-full object-cover"
               />
             </div>
             <div>
-              <h2 className="font-bold text-lg">user_name</h2>
+              <h2 className="font-bold text-lg">{user.username}</h2>
               <p className="text-sm">{likedPosts.length} ถูกใจ</p>
-              <p className="text-sm">about me.....</p>
+              <textarea
+                className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
+                placeholder="about me....."
+                value={aboutMe}
+                onChange={handleAboutMeChange}
+              />
             </div>
           </div>
 
@@ -142,13 +164,13 @@ function Profile_likeDetail() {
                     {/* ปุ่ม toggle */}
                     <div className="flex gap-2 mt-2">
                       <button
-                        className="px-3 py-1 bg-red-500 text-white hover:bg-red-600 rounded cursor-pointer"
+                        className="px-3 py-1 bg-red-500 text-white rounded cursor-pointer shadow-red-500/50 shadow-lg hover:bg-red-600"
                         onClick={() => toggleLike(posts.indexOf(post))}
                       >
                         <BsHeartFill /> {post.likes}
                       </button>
                       <button
-                        className="px-3 py-1 bg-blue-500 text-white hover:bg-blue-600 rounded cursor-pointer"
+                        className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer shadow-blue-500/50 shadow-lg hover:bg-blue-600"
                         onClick={() => toggleSave(posts.indexOf(post))}
                       >
                         {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
@@ -162,8 +184,8 @@ function Profile_likeDetail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <h2>โฆษณา</h2>
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+          <AdCarousel/>
         </div>
       </div>
     </div>
