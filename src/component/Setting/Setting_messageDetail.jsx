@@ -101,7 +101,7 @@ function Setting_messageDetail() {
           </div>
 
           {/* Right Panel */}
-          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
+          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4 ">
             <h2 className="font-bold text-lg mb-2">การติดตาม</h2>
             <p className="mb-5 text-lg">
               แจ้งให้ทราบเมื่อมีคนมาติดตาม

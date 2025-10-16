@@ -112,7 +112,7 @@ function CratePostDetail() {
       {/* Body Layout */}
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/main-page")}
