@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../supabaseClient"; // ← import client ที่ตั้งไว้แล้ว
+import { supabase } from "../../supabaseClient";
 import { useNavigate } from "react-router-dom";
 
 function VerifyEmail() {
@@ -8,17 +8,34 @@ function VerifyEmail() {
 
   useEffect(() => {
     async function verifyEmail() {
-      // ดึงพารามิเตอร์จาก URL ที่ Supabase ส่งมา เช่น access_token
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const token = hashParams.get("token_hash");
+      const type = hashParams.get("type") || "signup";
+
+      // ✅ ถ้าไม่มี token ให้ลองตรวจสอบ user ปัจจุบันแทน
+      if (!token) {
+        const { data } = await supabase.auth.getUser();
+        if (data?.user?.email_confirmed_at) {
+          setMessage("✅ อีเมลของคุณได้รับการยืนยันแล้ว!");
+          setTimeout(() => navigate("/"), 1000);
+        } else {
+          setMessage("❌ ไม่พบ token ในลิงก์ หรือ ลิงก์ไม่ถูกต้อง");
+        }
+        return;
+      }
+
+      // ✅ ถ้ามี token ก็ verify ปกติ
       const { error } = await supabase.auth.verifyOtp({
-        type: "signup",
-        token_hash: new URLSearchParams(window.location.hash.substring(1)).get("access_token"),
+        type,
+        token_hash: token,
       });
 
       if (error) {
+        console.error("Verification error:", error);
         setMessage("❌ ลิงก์ยืนยันอีเมลไม่ถูกต้องหรือหมดอายุ");
       } else {
         setMessage("✅ อีเมลของคุณได้รับการยืนยันเรียบร้อยแล้ว!");
-        setTimeout(() => navigate("/login"), 3000); // กลับไปหน้า login หลัง 3 วิ
+        setTimeout(() => navigate("/"), 3000);
       }
     }
 

@@ -11,39 +11,57 @@ function SignUpDetail() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!username || !email || !password || !confirmPassword) {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert("รหัสผ่านไม่ตรงกัน");
-      return;
-    }
+  if (!username || !email || !password || !confirmPassword) {
+    alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+    return;
+  }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username },
-        emailRedirectTo: "http://localhost:5173/verify-email",
-      },
-    });
+  if (password !== confirmPassword) {
+    alert("รหัสผ่านไม่ตรงกัน");
+    return;
+  }
 
-    if (error) {
-      alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
-      return;
-    }
+  // ✅ เช็กว่าอีเมลนี้มีอยู่แล้วในระบบไหม
+  const { data: emailExists, error: checkError } = await supabase.rpc(
+    "check_email_exists",
+    { email_input: email }
+  );
 
-    alert("สมัครสมาชิกสำเร็จ! 🎉 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ");
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    navigate("/");
-  };
+  if (checkError) {
+    alert("เกิดข้อผิดพลาดระหว่างตรวจสอบอีเมล: " + checkError.message);
+    return;
+  }
+
+  if (emailExists) {
+    alert("อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน");
+    return;
+  }
+
+  // ✅ สมัครสมาชิกใหม่
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username },
+      emailRedirectTo: "http://localhost:5173/verify-email",
+    },
+  });
+
+  if (error) {
+    alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
+    return;
+  }
+
+  alert("สมัครสมาชิกสำเร็จ! 🎉 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ");
+  setUsername("");
+  setEmail("");
+  setPassword("");
+  setConfirmPassword("");
+  navigate("/");
+};
 
   return (
     <div className="relative flex min-h-screen bg-[#56A750]">
