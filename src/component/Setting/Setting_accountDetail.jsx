@@ -18,10 +18,10 @@ function Setting_accountDetail() {
         </div>
         {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button onClick={() => {}}>
+          <button className="cursor-pointer" onClick={() => {}}>
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -32,26 +32,26 @@ function Setting_accountDetail() {
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
-            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            <button className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -65,22 +65,22 @@ function Setting_accountDetail() {
             <h1 className="font-bold text-xl mb-3">การตั้งค่า</h1>
             <h2 className="font-semibold text-xl mb-2">บัญชี</h2>
             <div className="flex flex-col gap-2">
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/setting")}
               >
                 ทั่วไป
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("")}
               >
                 สลับบัญชี
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/settingmessage")}
               >
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm"
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/settingprivate")}
               >
                 ความเป็นส่วนตัว
@@ -88,10 +88,10 @@ function Setting_accountDetail() {
             </div>
             <h2 className="font-semibold mt-4 mb-2">ความเป็นส่วนตัวและนโยบาย</h2>
             <div className="flex flex-col gap-2">
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm">
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm">
+              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
                 ความเป็นส่วนตัว
               </button>
             </div>
@@ -106,10 +106,10 @@ function Setting_accountDetail() {
             <p className="mb-2 text-lg">account 3</p>
             <p className="mb-2 text-lg">account 4</p>
             <h1 className="font-bold text-lg mb-2">เกี่ยวกับบัญชี</h1>
-            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm mb-2">
+            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm mb-2 cursor-pointer">
               + เพิ่มบัญชี
             </button>
-            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm">
+            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
               จัดการบัญชี
             </button>
           </div>

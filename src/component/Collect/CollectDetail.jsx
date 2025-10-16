@@ -106,10 +106,10 @@ function Collect_Detail() {
           />
         </div>
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -121,26 +121,26 @@ function Collect_Detail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -266,7 +266,7 @@ function Collect_Detail() {
                   ))}
                   <p>{post.text}</p>
                   <button
-                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300"
+                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300 cursor-pointer"
                     onClick={() => toggleSave(post.id)}
                   >
                     ❌ ลบบันทึก

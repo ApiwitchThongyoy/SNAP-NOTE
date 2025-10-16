@@ -78,10 +78,10 @@ function Profile_Detail() {
 
         {/* Icons */}
         <div className="flex gap-6 text-3xl">
-          <button>
+          <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -93,26 +93,26 @@ function Profile_Detail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -145,7 +145,7 @@ function Profile_Detail() {
             </div>
             <div>
               <h2 className="font-bold text-lg">{user.username}</h2>
-              <p className="text-sm">{posts.length} โพสต์</p>
+              <p className="text-sm ">{posts.length} โพสต์</p>
               <textarea
                 className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
                 placeholder="about me....."
@@ -159,13 +159,13 @@ function Profile_Detail() {
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
               <button
-                className="border-b-2 border-green-500 font-semibold"
+                className="border-b-2 border-green-500 font-semibold cursor-pointer"
                 onClick={() => navigate("/profile")}
               >
                 โพสต์
               </button>
               <button
-                className="text-gray-300"
+                className="text-gray-300 cursor-pointer"
                 onClick={() => navigate("/profile-like")}
               >
                 ถูกใจ
@@ -242,13 +242,13 @@ function Profile_Detail() {
                       {/* Buttons */}
                       <div className="flex gap-2 mt-2">
                         <button
-                          className="px-3 py-1 bg-blue-500 text-white rounded"
+                          className="px-3 py-1 bg-blue-500 text-white hover:bg-blue-600 rounded cursor-pointer"
                           onClick={() => handleEdit(index, post.text)}
                         >
                           แก้ไข
                         </button>
                         <button
-                          className="px-3 py-1 bg-red-500 text-white rounded"
+                          className="px-3 py-1 bg-red-500 text-white hover:bg-red-600 rounded cursor-pointer"
                           onClick={() => deletePost(index)}
                         >
                           ลบ
