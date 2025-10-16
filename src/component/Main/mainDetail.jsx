@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { PostContext } from "../../context/PostContext";
+import { useEffect, useState } from "react";
 import {
   BsBell,
   BsPersonCircle,
@@ -10,11 +9,122 @@ import {
   BsDownload,
 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 
 export default function MainDetail() {
-  const { posts, toggleLike, toggleSave } = useContext(PostContext);
   const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [saves, setSaves] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔹 โหลดข้อมูล user ปัจจุบัน
+  const fetchUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) console.error(error);
+    else setUser(data.user);
+  };
+
+  // 🔹 โหลดโพสต์ทั้งหมด
+  const fetchPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setPosts(data || []);
+    } catch (err) {
+      console.error("❌ Error fetching posts:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔹 โหลดข้อมูล like/save ของ user
+  const fetchUserActions = async (userId) => {
+    try {
+      const { data: likeData } = await supabase
+        .from("likes")
+        .select("post_id")
+        .eq("user_id", userId);
+      const { data: saveData } = await supabase
+        .from("saves")
+        .select("post_id")
+        .eq("user_id", userId);
+
+      setLikes(likeData?.map((l) => l.post_id) || []);
+      setSaves(saveData?.map((s) => s.post_id) || []);
+    } catch (err) {
+      console.error("❌ Error fetching user actions:", err);
+    }
+  };
+
+  // 🔹 toggle ถูกใจ ❤️
+  const toggleLike = async (postId) => {
+    if (!user) {
+      alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ");
+      return;
+    }
+
+    const isLiked = likes.includes(postId);
+    try {
+      if (isLiked) {
+        // ลบออกจาก like
+        await supabase
+          .from("likes")
+          .delete()
+          .match({ post_id: postId, user_id: user.id });
+        setLikes(likes.filter((id) => id !== postId));
+      } else {
+        // เพิ่ม like
+        await supabase
+          .from("likes")
+          .insert([{ post_id: postId, user_id: user.id }]);
+        setLikes([...likes, postId]);
+      }
+    } catch (err) {
+      console.error("❌ Error toggling like:", err);
+    }
+  };
+
+  // 🔹 toggle บันทึก 🔖
+  const toggleSave = async (postId) => {
+    if (!user) {
+      alert("กรุณาเข้าสู่ระบบก่อนบันทึกโพสต์");
+      return;
+    }
+
+    const isSaved = saves.includes(postId);
+    try {
+      if (isSaved) {
+        await supabase
+          .from("saves")
+          .delete()
+          .match({ post_id: postId, user_id: user.id });
+        setSaves(saves.filter((id) => id !== postId));
+      } else {
+        await supabase
+          .from("saves")
+          .insert([{ post_id: postId, user_id: user.id }]);
+        setSaves([...saves, postId]);
+      }
+    } catch (err) {
+      console.error("❌ Error toggling save:", err);
+    }
+  };
+
+  // โหลดข้อมูลทั้งหมดตอนเริ่ม
+  useEffect(() => {
+    fetchUser().then(() => fetchPosts());
+  }, []);
+
+  // โหลด likes/saves หลังได้ user
+  useEffect(() => {
+    if (user) fetchUserActions(user.id);
+  }, [user]);
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -28,10 +138,10 @@ export default function MainDetail() {
           />
         </div>
         <div className="flex gap-6 text-3xl">
-          <button className="cursor-pointer">
+          <button>
             <BsBell />
           </button>
-          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
+          <button onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -40,29 +150,29 @@ export default function MainDetail() {
       {/* Body */}
       <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+            className="hover:bg-green-400 text-black rounded-3xl p-2"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -70,95 +180,81 @@ export default function MainDetail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">โพสต์ล่าสุด</h2>
 
-          {posts.length === 0 ? (
+          {loading ? (
+            <p>กำลังโหลดโพสต์...</p>
+          ) : posts.length === 0 ? (
             <p className="text-gray-300">ยังไม่มีโพสต์</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {posts.map((post, index) => (
-                <div
-                  key={index}
-                  className="bg-white text-black rounded-lg p-4 shadow w-full flex flex-col gap-3"
-                >
+              {posts.map((post) => (
+                <div key={post.id} className="bg-white text-black rounded-lg p-4 shadow">
+                  {/* Header */}
                   <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
                     <BsPersonCircle size={40} className="text-gray-600" />
                     <div className="flex flex-col">
-                      <span className="font-semibold text-base">
-                        {post.author || "ผู้ใช้งาน"}
-                      </span>
+                      <span className="font-semibold text-base">ผู้ใช้งาน</span>
                       <span className="text-xs text-gray-500">
-                        {post.timestamp || "เมื่อสักครู่"}
+                        {new Date(post.created_at).toLocaleString("th-TH")}
                       </span>
                     </div>
                   </div>
 
-                  {/* เนื้อหาโพสต์ */}
-                  <p className="mb-2 text-base">{post.text}</p>
+                  {/* Content */}
+                  <p className="mt-2">{post.content}</p>
 
-                  {/* แสดงไฟล์ */}
-                  {post.files && post.files.length > 0 && (
-                    <div className="flex flex-col gap-4">
-                      {post.files.map((file, i) =>
-                        file.type.startsWith("image/") ? (
-                          <div
-                            key={i}
-                            className="w-full bg-gray-100 rounded-lg overflow-hidden shadow-md"
-                          >
-                            <img
-                              src={file.url}
-                              alt={file.name}
-                              className="w-full h-auto object-contain"
-                            />
-                            <div className="flex justify-between items-center p-2 bg-gray-200">
-                              <span className="text-sm text-gray-600">
-                                {file.name}
-                              </span>
-                              <a
-                                href={file.url}
-                                download={file.name}
-                                className="text-green-600 hover:text-green-800"
-                              >
-                                <BsDownload size={20} />
-                              </a>
-                            </div>
-                          </div>
+                  {/* Files */}
+                  {Array.isArray(post.files) &&
+                    post.files.map((f, idx) => (
+                      <div key={idx} className="mt-3">
+                        {f.type?.startsWith("image/") ? (
+                          <img
+                            src={f.url}
+                            alt={f.name}
+                            className="w-full rounded-lg object-contain"
+                          />
                         ) : (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between p-3 bg-gray-200 rounded-lg shadow"
+                          <a
+                            href={f.url}
+                            download
+                            className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2 inline-block"
                           >
-                            <span className="flex items-center gap-2 text-sm text-black">
-                              📄 {file.name}
-                            </span>
-                            <a
-                              href={file.url}
-                              download={file.name}
-                              className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                            >
-                              ดาวน์โหลด
-                            </a>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )}
+                            <BsDownload /> {f.name}
+                          </a>
+                        )}
+                      </div>
+                    ))}
 
-                  {/* ปุ่ม Like, Save */}
-                  <div className="flex gap-2 mt-2 flex-wrap">
+                  {/* Buttons */}
+                  <div className="flex gap-2 mt-3">
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer shadow-red-500/50 shadow-lg"
-                      onClick={() => toggleLike(index)}
+                      className={`flex items-center gap-2 px-3 py-1 rounded ${
+                        likes.includes(post.id)
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
+                      onClick={() => toggleLike(post.id)}
                     >
-                      {post.liked ? <BsHeartFill /> : <BsHeart />} {post.likes}
+                      {likes.includes(post.id) ? <BsHeartFill /> : <BsHeart />}
+                      ถูกใจ
                     </button>
+
                     <button
-                      className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
-                      onClick={() => toggleSave(index)}
+                      className={`flex items-center gap-2 px-3 py-1 rounded ${
+                        saves.includes(post.id)
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
+                      onClick={() => toggleSave(post.id)}
                     >
-                      {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
-                      {post.saved ? " บันทึกแล้ว" : " บันทึก"}
+                      {saves.includes(post.id) ? (
+                        <BsBookmarkFill />
+                      ) : (
+                        <BsBookmark />
+                      )}
+                      บันทึก
                     </button>
                   </div>
                 </div>
@@ -168,11 +264,10 @@ export default function MainDetail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <AdCarousel/>
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+          <AdCarousel />
         </div>
       </div>
     </div>
   );
 }
-
