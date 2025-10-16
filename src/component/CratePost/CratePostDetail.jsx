@@ -90,15 +90,23 @@ export default function CratePostDetail() {
 
       // ตรวจสอบว่า user มีข้อมูลใน table users
       const { data: existingUser } = await supabase
-        .from("users")
-        .select("id")
-        .eq("id", user.id)
-        .single();
+      .from("users")
+      .select("id")
+      .eq("id", user.id)
+      .single();
 
-      if (!existingUser) {
-        alert("บัญชีผู้ใช้ยังไม่มีข้อมูลในระบบ โปรดสมัคร/login ให้ถูกต้อง");
-        return;
-      }
+    if (!existingUser) {
+      // ถ้าไม่มีใน users → เพิ่มให้อัตโนมัติ
+      await supabase.from("users").insert([
+        {
+          id: user.id,
+          email: user.email,
+          username: user.user_metadata?.username || user.email.split("@")[0],
+          avatar_url: user.user_metadata?.avatar_url || null,
+          bio: "",
+        },
+      ]);
+    }
 
       const fileUrls = [];
 
@@ -112,8 +120,12 @@ export default function CratePostDetail() {
           .from("post_files")
           .upload(filePath, file);
 
-        if (uploadError) throw uploadError;
-
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          throw uploadError;
+        }
+        console.log("Upload success:", fileName);
+        
         const { data: urlData } = supabase.storage
           .from("post_files")
           .getPublicUrl(filePath);
