@@ -56,9 +56,9 @@ function Profile_likeDetail() {
       </div>
 
       {/* Body */}
-      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
+      <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl ">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
               className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
@@ -88,7 +88,7 @@ function Profile_likeDetail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl">
+        <div className="w-3/5 bg-[#636363] overflow-y-auto p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           {/* Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
@@ -113,13 +113,13 @@ function Profile_likeDetail() {
           <div className="bg-[#434343] rounded-xl p-6">
             <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
               <button
-                className="text-gray-300"
+                className="text-gray-300 cursor-pointer"
                 onClick={() => navigate("/profile")}
               >
                 โพสต์
               </button>
               <button
-                className="border-b-2 border-green-500 font-semibold"
+                className="border-b-2 border-green-500 font-semibold cursor-pointer"
                 onClick={() => navigate("/profile-like")}
               >
                 ถูกใจ
