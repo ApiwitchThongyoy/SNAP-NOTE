@@ -163,7 +163,7 @@ export default function CratePostDetail() {
             className="w-full rounded-3xl p-3 text-black"
           />
         </div>
-        <div className="flex gap-6 text-3xl">
+        <div className="flex gap-10 text-3xl mr-25">
           <button className="cursor-pointer">
             <BsBell />
           </button>

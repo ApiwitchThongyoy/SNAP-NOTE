@@ -177,7 +177,7 @@ export default function MainDetail() {
             className="w-full rounded-3xl p-3 text-black"
           />
         </div>
-        <div className="flex gap-6 text-3xl">
+        <div className="flex gap-10 text-3xl mr-25">
           <button>
             <BsBell />
           </button>
@@ -274,7 +274,7 @@ export default function MainDetail() {
                           <a
                             href={f.url}
                             download
-                            className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2 inline-block"
+                            className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2 "
                           >
                             <BsDownload /> {f.name || "ดาวน์โหลดไฟล์"}
                           </a>
