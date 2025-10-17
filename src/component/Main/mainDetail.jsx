@@ -20,14 +20,12 @@ export default function MainDetail() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ โหลดข้อมูล user ปัจจุบัน
   const fetchUser = async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error) console.error(error);
     else setUser(data.user);
   };
 
-  // ✅ โหลดโพสต์ทั้งหมด + ดึง avatar_url มาด้วย
   const fetchPosts = async () => {
     try {
       const { data: postsData, error: postsError } = await supabase
@@ -37,14 +35,12 @@ export default function MainDetail() {
 
       if (postsError) throw postsError;
 
-      // ดึง profiles พร้อม avatar_url ด้วย
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
         .select("id, username, email, avatar_url");
 
       if (profilesError) throw profilesError;
 
-      // รวมข้อมูลโพสต์ + โปรไฟล์
       const merged = postsData.map((p) => ({
         ...p,
         profile: profilesData.find((u) => u.id === p.user_id),
@@ -66,7 +62,6 @@ export default function MainDetail() {
     }
   };
 
-  // ✅ โหลด likes/saves ของ user
   const fetchUserActions = async (userId) => {
     try {
       const { data: likeData } = await supabase
@@ -85,7 +80,6 @@ export default function MainDetail() {
     }
   };
 
-  // ✅ toggle like
   const toggleLike = async (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ");
@@ -110,7 +104,6 @@ export default function MainDetail() {
     }
   };
 
-  // ✅ toggle save
   const toggleSave = async (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนบันทึกโพสต์");
@@ -135,13 +128,11 @@ export default function MainDetail() {
     }
   };
 
-  // ✅ โหลดข้อมูลเริ่มต้น + realtime
   useEffect(() => {
     const init = async () => {
       await fetchUser();
       await fetchPosts();
 
-      // Realtime update เมื่อโพสต์มีการเปลี่ยนแปลง
       const channel = supabase
         .channel("posts-changes")
         .on(
@@ -234,7 +225,7 @@ export default function MainDetail() {
                   key={post.id}
                   className="bg-white text-black rounded-lg p-4 shadow"
                 >
-                  {/* ✅ Header (แสดงรูปโปรไฟล์จริง) */}
+                  {/* Header */}
                   <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
                     {post.profile?.avatar_url ? (
                       <img
@@ -260,11 +251,18 @@ export default function MainDetail() {
                   {/* Content */}
                   <p className="mt-2">{post.content}</p>
 
-                  {/* Files */}
+                  {/* ✅ Files */}
                   {Array.isArray(post.files) &&
                     post.files.map((f, idx) => (
                       <div key={idx} className="mt-3">
-                        {f.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                        {f.type?.startsWith("video/") ||
+                        f.url?.match(/\.(mp4|webm|ogg)$/i) ? (
+                          <video
+                            src={f.url}
+                            controls
+                            className="w-full rounded-lg object-contain"
+                          />
+                        ) : f.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                           <img
                             src={f.url}
                             alt={f.name || "file"}

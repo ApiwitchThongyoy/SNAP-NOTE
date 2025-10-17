@@ -31,10 +31,11 @@ function UploadButtons({ handleFiles }) {
   return (
     <div>
       <label className="bg-gradient-to-r from-red-400 to-red-600 text-white px-6 py-3 rounded-full cursor-pointer hover:shadow-lg transition">
-        ✨ เพิ่มไฟล์สวยๆ
+        ✨ เพิ่มไฟล์สวยๆ หรือวิดีโอ
         <input
           type="file"
           multiple
+          accept="image/*,video/*" // ✅ เพิ่มตรงนี้ให้เลือกวิดีโอได้
           className="hidden"
           onChange={(e) => handleFilesLocal([...e.target.files])}
         />
@@ -130,11 +131,10 @@ export default function CratePostDetail() {
         fileUrls.push({
           url: urlData.publicUrl,
           name: file.name,
-          type: file.type,
+          type: file.type, // ✅ เก็บประเภทไฟล์ไว้ตรวจว่าเป็นภาพหรือวิดีโอ
         });
       }
 
-      // ✅ ต้อง stringify ก่อนบันทึก
       const { error: insertError } = await supabase.from("posts").insert([
         {
           content: postText,
