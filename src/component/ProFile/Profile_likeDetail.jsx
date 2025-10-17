@@ -31,7 +31,7 @@ function Profile_likeDetail() {
     setAboutMe(savedAbout);
   }, []);
 
-  // ✅ กรองเฉพาะโพสต์ที่กดถูกใจ
+///✅ กรองเฉพาะโพสต์ที่กดถูกใจ
   const likedPosts = posts.filter((post) => post.liked);
 
   return (
