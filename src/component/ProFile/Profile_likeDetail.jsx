@@ -1,4 +1,4 @@
-import { useContext,useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { PostContext } from "../../context/PostContext";
 import {
   BsBell,
@@ -20,19 +20,25 @@ function Profile_likeDetail() {
     localStorage.getItem("profileImg") || "https://placekitten.com/200/200"
   );
 
-  const handleAboutMeChange = (e) => {
-    setAboutMe(e.target.value);
-    localStorage.setItem("aboutMe", e.target.value);
-  };
-
-
+  // ดึงข้อมูล "about me" จาก localStorage
   useEffect(() => {
     const savedAbout = localStorage.getItem("aboutMe") || "";
     setAboutMe(savedAbout);
   }, []);
 
-///✅ กรองเฉพาะโพสต์ที่กดถูกใจ
+  // อัปเดต "about me"
+  const handleAboutMeChange = (e) => {
+    setAboutMe(e.target.value);
+    localStorage.setItem("aboutMe", e.target.value);
+  };
+
+  // ✅ กรองเฉพาะโพสต์ที่กดถูกใจ
   const likedPosts = posts.filter((post) => post.liked);
+
+  // ✅ เมื่อกดถูกใจอีกครั้ง ให้ลบออกจากหน้านี้ทันที
+  const handleToggleLike = (index) => {
+    toggleLike(index);
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -49,7 +55,10 @@ function Profile_likeDetail() {
           <button className="cursor-pointer">
             <BsBell />
           </button>
-          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
+          <button
+            className="cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
             <BsPersonCircle />
           </button>
         </div>
@@ -92,14 +101,11 @@ function Profile_likeDetail() {
           {/* Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
-              <img
-                src={profileImg}
-                className="w-full h-full object-cover"
-              />
+              <img src={profileImg} className="w-full h-full object-cover" />
             </div>
             <div>
               <h2 className="font-bold text-lg">{user.username}</h2>
-              <p className="text-sm">{likedPosts.length} ถูกใจ</p>
+              <p className="text-sm">{likedPosts.length} โพสต์ที่ถูกใจ</p>
               <textarea
                 className="text-black rounded p-2 mt-2 w-full focus:outline-none transition-all resize-none"
                 placeholder="about me....."
@@ -129,55 +135,61 @@ function Profile_likeDetail() {
             {/* Liked Posts */}
             <div className="flex flex-col gap-4">
               {likedPosts.length === 0 ? (
-                <p className="text-gray-300">ยังไม่มีโพสต์ที่ถูกใจ</p>
+                <p className="text-gray-300 text-center">ยังไม่มีโพสต์ที่ถูกใจ</p>
               ) : (
-                likedPosts.map((post, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2"
-                  >
-                    <p>{post.text}</p>
+                likedPosts.map((post, index) => {
+                  const originalIndex = posts.indexOf(post);
+                  return (
+                    <div
+                      key={index}
+                      className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2"
+                    >
+                      <p>{post.text}</p>
 
-                    {/* แสดงไฟล์ถ้ามี */}
-                    {post.files && post.files.length > 0 && (
-                      <div className="flex gap-4 flex-wrap">
-                        {post.files.map((file, i) =>
-                          file.type.startsWith("image/") ? (
-                            <img
-                              key={i}
-                              src={file.url}
-                              alt={file.name}
-                              className="max-w-full h-auto rounded"
-                            />
-                          ) : (
-                            <span
-                              key={i}
-                              className="px-2 py-1 bg-gray-200 rounded text-sm text-black"
-                            >
-                              📄 {file.name}
-                            </span>
-                          )
-                        )}
+                      {/* ✅ แสดงรูปภาพหรือไฟล์ */}
+                      {post.files && post.files.length > 0 && (
+                        <div className="flex gap-4 flex-wrap">
+                          {post.files.map((file, i) =>
+                            file.type.startsWith("image/") ? (
+                              <img
+                                key={i}
+                                src={file.url}
+                                alt={file.name}
+                                className="max-w-full h-auto rounded"
+                              />
+                            ) : (
+                              <a
+                                key={i}
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2 py-1 bg-gray-200 rounded text-sm text-black hover:bg-gray-300 transition"
+                              >
+                                📄 {file.name}
+                              </a>
+                            )
+                          )}
+                        </div>
+                      )}
+
+                      {/* ✅ ปุ่ม toggle */}
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          className="px-3 py-1 bg-red-500 text-white rounded cursor-pointer shadow-red-500/50 shadow-lg hover:bg-red-600 flex items-center gap-2"
+                          onClick={() => handleToggleLike(originalIndex)}
+                        >
+                          <BsHeartFill /> {post.likes}
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer shadow-blue-500/50 shadow-lg hover:bg-blue-600 flex items-center gap-2"
+                          onClick={() => toggleSave(originalIndex)}
+                        >
+                          {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
+                        </button>
                       </div>
-                    )}
-
-                    {/* ปุ่ม toggle */}
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        className="px-3 py-1 bg-red-500 text-white rounded cursor-pointer shadow-red-500/50 shadow-lg hover:bg-red-600"
-                        onClick={() => toggleLike(posts.indexOf(post))}
-                      >
-                        <BsHeartFill /> {post.likes}
-                      </button>
-                      <button
-                        className="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer shadow-blue-500/50 shadow-lg hover:bg-blue-600"
-                        onClick={() => toggleSave(posts.indexOf(post))}
-                      >
-                        {post.saved ? <BsBookmarkFill /> : <BsBookmark />}
-                      </button>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
@@ -185,7 +197,7 @@ function Profile_likeDetail() {
 
         {/* Ads */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
-          <AdCarousel/>
+          <AdCarousel />
         </div>
       </div>
     </div>

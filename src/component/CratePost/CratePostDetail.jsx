@@ -1,4 +1,3 @@
-// src/pages/CratePostDetail.jsx
 import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -73,7 +72,6 @@ export default function CratePostDetail() {
 
   const handleFiles = (newFiles) => setFiles(newFiles);
 
-  // ✅ ปลอดภัย 100%: ใช้ timestamp + random + นามสกุลไฟล์
   const generateSafeFileName = (file) => {
     const ext = file.name.split(".").pop();
     return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${ext}`;
@@ -91,6 +89,7 @@ export default function CratePostDetail() {
         return;
       }
 
+      // ตรวจสอบโปรไฟล์
       const { data: existingUser } = await supabase
         .from("profiles")
         .select("id")
@@ -98,7 +97,7 @@ export default function CratePostDetail() {
         .single();
 
       if (!existingUser) {
-        const { error: insertUserError } = await supabase.from("profiles").insert([
+        await supabase.from("profiles").insert([
           {
             id: user.id,
             email: user.email,
@@ -107,18 +106,11 @@ export default function CratePostDetail() {
             bio: "",
           },
         ]);
-
-        if (insertUserError) {
-          console.error("❌ Failed to insert user:", insertUserError);
-          alert("ไม่สามารถเพิ่มข้อมูลผู้ใช้ได้");
-          return;
-        }
       }
 
       const fileUrls = [];
 
       for (const file of files) {
-        // ✅ ชื่อไฟล์ใหม่ ปลอดภัยกับ Supabase
         const fileName = generateSafeFileName(file);
         const filePath = `uploads/${fileName}`;
 
@@ -136,17 +128,17 @@ export default function CratePostDetail() {
           .getPublicUrl(filePath);
 
         fileUrls.push({
-          original_name: file.name,
-          safe_name: fileName,
           url: urlData.publicUrl,
+          name: file.name,
           type: file.type,
         });
       }
 
+      // ✅ ต้อง stringify ก่อนบันทึก
       const { error: insertError } = await supabase.from("posts").insert([
         {
           content: postText,
-          files: fileUrls,
+          files: JSON.stringify(fileUrls),
           user_id: user.id,
         },
       ]);

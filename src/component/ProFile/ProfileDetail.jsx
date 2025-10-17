@@ -4,27 +4,28 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 
-function Profile_Detail() {
+function ProfileDetail() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState({});
   const [posts, setPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [tab, setTab] = useState("myPosts");
   const [aboutMe, setAboutMe] = useState("");
   const [profileImg, setProfileImg] = useState("https://placekitten.com/200/200");
   const [editIndex, setEditIndex] = useState(null);
   const [editText, setEditText] = useState("");
+  const [editFile, setEditFile] = useState(null);
 
   // ✅ โหลดข้อมูลเริ่มต้น
   useEffect(() => {
     const init = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       setUser(user);
 
-      // ✅ โหลดข้อมูลโปรไฟล์
+      // โหลดข้อมูลโปรไฟล์
       const { data: profileData } = await supabase
         .from("profiles")
         .select("*")
@@ -37,7 +38,7 @@ function Profile_Detail() {
         setProfileImg(profileData.avatar_url || "https://placekitten.com/200/200");
       }
 
-      // ✅ โหลดโพสต์ของ user
+      // โหลดโพสต์ของ user
       const { data: postsData } = await supabase
         .from("posts")
         .select("*")
@@ -46,39 +47,67 @@ function Profile_Detail() {
 
       setPosts(postsData || []);
 
-      // ✅ ตั้งค่า realtime
-      const channel = supabase
-        .channel("realtime-user-posts")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "posts",
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            if (payload.new?.user_id !== user.id) return;
-            if (payload.eventType === "INSERT") {
-              setPosts((prev) => [payload.new, ...prev]);
-            } else if (payload.eventType === "UPDATE") {
-              setPosts((prev) =>
-                prev.map((p) => (p.id === payload.new.id ? payload.new : p))
-              );
-            } else if (payload.eventType === "DELETE") {
-              setPosts((prev) => prev.filter((p) => p.id !== payload.old.id));
-            }
-          }
-        )
-        .subscribe();
+      // โหลดโพสต์ที่ถูกใจ
+      const { data: likedData } = await supabase
+        .from("likes")
+        .select("post_id, posts(*)")
+        .eq("user_id", user.id);
 
-      return () => {
-        supabase.removeChannel(channel);
-      };
+      if (likedData) {
+        setLikedPosts(likedData.map((l) => l.posts));
+      }
     };
 
     init();
   }, []);
+
+  // ✅ ฟังก์ชันล้างชื่อไฟล์
+  const sanitizeFileName = (name) => {
+    return name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9._-]/g, "_");
+  };
+
+  // ✅ เปลี่ยนรูปโปรไฟล์
+  const handleProfileImgChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !user) return;
+
+    const safeFileName = sanitizeFileName(file.name);
+    const fileName = `${user.id}-${Date.now()}-${safeFileName}`;
+    const filePath = `${user.id}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("profile_avatars")
+      .upload(filePath, file, { cacheControl: "3600", upsert: true });
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      alert("❌ อัปโหลดรูปภาพไม่สำเร็จ");
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("profile_avatars")
+      .getPublicUrl(filePath);
+
+    const publicUrl = urlData.publicUrl;
+
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({ avatar_url: publicUrl })
+      .eq("id", user.id);
+
+    if (updateError) {
+      console.error("Update avatar error:", updateError);
+      alert("❌ บันทึกข้อมูลโปรไฟล์ไม่สำเร็จ");
+      return;
+    }
+
+    setProfileImg(publicUrl);
+    alert("✅ อัปโหลดรูปโปรไฟล์สำเร็จ!");
+  };
 
   // ✅ อัปเดต bio
   const handleAboutMeChange = async (e) => {
@@ -88,67 +117,66 @@ function Profile_Detail() {
     await supabase.from("profiles").update({ bio: value }).eq("id", user.id);
   };
 
-  // ✅ อัปโหลดและอัปเดตรูปโปรไฟล์
-  const handleProfileImgChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !user) return;
-
-    const fileName = `${user.id}-${Date.now()}-${file.name.replace(/\s/g, "_")}`;
-    const filePath = `avatars/${fileName}`;
-
-    // 📤 Upload ไป Storage bucket ชื่อ "profile_avatars"
-    const { error: uploadError } = await supabase.storage
-      .from("profile_avatars")
-      .upload(filePath, file);
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      alert("อัปโหลดรูปภาพไม่สำเร็จ");
-      return;
-    }
-
-    // 🔗 ดึง public URL
-    const { data: urlData } = supabase.storage
-      .from("profile_avatars")
-      .getPublicUrl(filePath);
-
-    const publicUrl = urlData.publicUrl;
-
-    // 🗃️ อัปเดต DB
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ avatar_url: publicUrl })
-      .eq("id", user.id);
-
-    if (updateError) {
-      console.error("Update avatar error:", updateError);
-      return;
-    }
-
-    setProfileImg(publicUrl);
-    alert("อัปเดตรูปโปรไฟล์เรียบร้อยแล้ว!");
-  };
-
   // ✅ แก้ไขโพสต์
   const handleEdit = (index, content) => {
     setEditIndex(index);
     setEditText(content);
   };
 
+  // ✅ อัปโหลดไฟล์ใหม่ตอนแก้ไข
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setEditFile(file);
+  };
+
+  // ✅ บันทึกโพสต์ที่แก้ไข
   const handleSaveEdit = async (postId) => {
+    let fileUrl = null;
+
+    if (editFile) {
+      const safeFileName = sanitizeFileName(editFile.name);
+      const fileName = `${user.id}-${Date.now()}-${safeFileName}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("post_files")
+        .upload(filePath, editFile, { cacheControl: "3600", upsert: true });
+
+      if (uploadError) {
+        console.error("File upload error:", uploadError);
+        alert("❌ ไม่สามารถอัปโหลดไฟล์ได้");
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("post_files")
+        .getPublicUrl(filePath);
+
+      fileUrl = urlData.publicUrl;
+    }
+
+    const updateData = { content: editText };
+    if (fileUrl) {
+      updateData.files = JSON.stringify([{ url: fileUrl, name: editFile.name }]);
+    }
+
     const { error } = await supabase
       .from("posts")
-      .update({ content: editText })
+      .update(updateData)
       .eq("id", postId);
+
     if (!error) {
       setEditIndex(null);
       setEditText("");
+      setEditFile(null);
+      window.location.reload();
     }
   };
 
   // ✅ ลบโพสต์
   const handleDeletePost = async (postId) => {
     await supabase.from("posts").delete().eq("id", postId);
+    setPosts(posts.filter((p) => p.id !== postId));
   };
 
   return (
@@ -238,102 +266,140 @@ function Profile_Detail() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-[#434343] rounded-xl p-6">
-            <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
-              <button className="border-b-2 border-green-500 font-semibold">
-                โพสต์
-              </button>
-              <button
-                onClick={() => navigate("/profile-like")}
-                className="text-gray-300 cursor-pointer"
-              >
-                ถูกใจ
-              </button>
-            </div>
-
-            {/* ✅ แสดงโพสต์ */}
-            {posts.length === 0 ? (
-              <p className="text-center text-gray-400 mt-6">
-                ยังไม่มีโพสต์ของคุณ
-              </p>
-            ) : (
-              posts.map((post, index) => (
-                <div
-                  key={post.id}
-                  className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4"
-                >
-                  {editIndex === index ? (
-                    <>
-                      <textarea
-                        className="w-full border rounded p-2 text-black"
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                      />
-                      <div className="flex gap-2 mt-2">
-                        <button
-                          onClick={() => handleSaveEdit(post.id)}
-                          className="px-4 py-2 bg-green-500 rounded"
-                        >
-                          บันทึก
-                        </button>
-                        <button
-                          onClick={() => setEditIndex(null)}
-                          className="px-4 py-2 bg-gray-500 rounded"
-                        >
-                          ยกเลิก
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>{post.content}</p>
-
-                      {/* ✅ แสดงไฟล์ในโพสต์ */}
-                      {post.files && Array.isArray(post.files) && post.files.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {post.files.map((file, i) =>
-                            file.type?.startsWith("image/") ? (
-                              <img
-                                key={i}
-                                src={file.url}
-                                alt={file.name}
-                                className="w-32 h-32 object-cover rounded"
-                              />
-                            ) : (
-                              <a
-                                key={i}
-                                href={file.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-400 underline"
-                              >
-                                {file.name}
-                              </a>
-                            )
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex gap-2 mt-2">
-                        <button
-                          onClick={() => handleEdit(index, post.content)}
-                          className="px-3 py-1 bg-blue-500 rounded"
-                        >
-                          แก้ไข
-                        </button>
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          className="px-3 py-1 bg-red-500 rounded"
-                        >
-                          ลบ
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            )}
+          <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
+            <button
+              className={`${
+                tab === "myPosts"
+                  ? "border-b-2 border-green-500 font-semibold"
+                  : "text-gray-300"
+              }`}
+              onClick={() => setTab("myPosts")}
+            >
+              โพสต์ของฉัน
+            </button>
+            <button
+              className={`${
+                tab === "ProFile_like"
+                  ? "border-b-2 border-green-500 font-semibold"
+                  : "text-gray-300"
+              }`}
+              onClick={() => setTab("ProFile_like")}
+            >
+              ถูกใจ
+            </button>
           </div>
+
+          {/* แสดงโพสต์ */}
+          {tab === "myPosts" ? (
+            posts.length === 0 ? (
+              <p className="text-center text-gray-400 mt-6">ยังไม่มีโพสต์ของคุณ</p>
+            ) : (
+              posts.map((post, index) => {
+                let files = [];
+                try {
+                  if (typeof post.files === "string") {
+                    files = JSON.parse(post.files);
+                  } else if (Array.isArray(post.files)) {
+                    files = post.files;
+                  }
+                } catch {
+                  files = [];
+                }
+
+                return (
+                  <div
+                    key={post.id}
+                    className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4"
+                  >
+                    {editIndex === index ? (
+                      <>
+                        <textarea
+                          className="w-full border rounded p-2 text-black"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                        />
+                        <input
+                          type="file"
+                          onChange={handleFileChange}
+                          className="mt-2"
+                        />
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            onClick={() => handleSaveEdit(post.id)}
+                            className="px-4 py-2 bg-green-500 rounded"
+                          >
+                            บันทึก
+                          </button>
+                          <button
+                            onClick={() => setEditIndex(null)}
+                            className="px-4 py-2 bg-gray-500 rounded"
+                          >
+                            ยกเลิก
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p>{post.content}</p>
+
+                        {/* ✅ แสดงรูป/ไฟล์แนบ */}
+                        {files.length > 0 && (
+                          <div className="flex flex-wrap gap-3 mt-2">
+                            {files.map((file, i) =>
+                              file.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                                <img
+                                  key={i}
+                                  src={file.url}
+                                  alt={file.name}
+                                  className="w-40 h-40 object-cover rounded-lg border border-gray-600"
+                                />
+                              ) : (
+                                <a
+                                  key={i}
+                                  href={file.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-300 underline"
+                                >
+                                  📎 {file.name}
+                                </a>
+                              )
+                            )}
+                          </div>
+                        )}
+
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            onClick={() => handleEdit(index, post.content)}
+                            className="px-3 py-1 bg-blue-500 rounded"
+                          >
+                            แก้ไข
+                          </button>
+                          <button
+                            onClick={() => handleDeletePost(post.id)}
+                            className="px-3 py-1 bg-red-500 rounded"
+                          >
+                            ลบ
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
+            )
+          ) : likedPosts.length === 0 ? (
+            <p className="text-center text-gray-400 mt-6">ยังไม่มีโพสต์ที่ถูกใจ</p>
+          ) : (
+            likedPosts.map((post) => (
+              <div
+                key={post.id}
+                className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4"
+              >
+                <p>{post.content}</p>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Ads */}
@@ -345,4 +411,4 @@ function Profile_Detail() {
   );
 }
 
-export default Profile_Detail;
+export default ProfileDetail;

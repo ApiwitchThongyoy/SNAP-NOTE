@@ -20,32 +20,43 @@ export default function MainDetail() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 โหลดข้อมูล user ปัจจุบัน
+  // โหลด user ปัจจุบัน
   const fetchUser = async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error) console.error(error);
     else setUser(data.user);
   };
 
-  // 🔹 โหลดโพสต์ทั้งหมด (พร้อมชื่อผู้ใช้)
+  // โหลดโพสต์ทั้งหมด
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: postsData, error: postsError } = await supabase
         .from("posts")
-        .select(`
-          id,
-          content,
-          files,
-          created_at,
-          user_id,
-          users (
-            username,
-            email
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
-      if (error) throw error;
-      setPosts(data || []);
+
+      if (postsError) throw postsError;
+
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, username, email");
+
+      if (profilesError) throw profilesError;
+
+      const merged = postsData.map((p) => ({
+        ...p,
+        profile: profilesData.find((u) => u.id === p.user_id),
+        files: (() => {
+          try {
+            if (typeof p.files === "string") return JSON.parse(p.files);
+            return p.files || [];
+          } catch {
+            return [];
+          }
+        })(),
+      }));
+
+      setPosts(merged);
     } catch (err) {
       console.error("❌ Error fetching posts:", err);
     } finally {
@@ -53,7 +64,7 @@ export default function MainDetail() {
     }
   };
 
-  // 🔹 โหลดข้อมูล like/save ของ user
+  // โหลด likes/saves ของ user
   const fetchUserActions = async (userId) => {
     try {
       const { data: likeData } = await supabase
@@ -72,13 +83,12 @@ export default function MainDetail() {
     }
   };
 
-  // 🔹 toggle ถูกใจ ❤️
+  // toggle like
   const toggleLike = async (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ");
       return;
     }
-
     const isLiked = likes.includes(postId);
     try {
       if (isLiked) {
@@ -98,13 +108,12 @@ export default function MainDetail() {
     }
   };
 
-  // 🔹 toggle บันทึก 🔖
+  // toggle save
   const toggleSave = async (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนบันทึกโพสต์");
       return;
     }
-
     const isSaved = saves.includes(postId);
     try {
       if (isSaved) {
@@ -124,12 +133,34 @@ export default function MainDetail() {
     }
   };
 
-  // โหลดข้อมูลทั้งหมดตอนเริ่ม
+  // โหลดข้อมูลเริ่มต้น + realtime
   useEffect(() => {
-    fetchUser().then(() => fetchPosts());
+    const init = async () => {
+      await fetchUser();
+      await fetchPosts();
+
+      // ✅ realtime update เมื่อมีโพสต์เปลี่ยน
+      const channel = supabase
+        .channel("posts-changes")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "posts" },
+          () => {
+            console.log("📡 มีการเปลี่ยนแปลงโพสต์");
+            fetchPosts();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+
+    init();
   }, []);
 
-  // โหลด likes/saves หลังได้ user
+  // โหลด likes/saves เมื่อได้ user
   useEffect(() => {
     if (user) fetchUserActions(user.id);
   }, [user]);
@@ -198,13 +229,18 @@ export default function MainDetail() {
           ) : (
             <div className="flex flex-col gap-4">
               {posts.map((post) => (
-                <div key={post.id} className="bg-white text-black rounded-lg p-4 shadow">
+                <div
+                  key={post.id}
+                  className="bg-white text-black rounded-lg p-4 shadow"
+                >
                   {/* Header */}
                   <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
                     <BsPersonCircle size={40} className="text-gray-600" />
                     <div className="flex flex-col">
                       <span className="font-semibold text-base">
-                        {post.users?.username || post.users?.email || "ผู้ใช้งาน"}
+                        {post.profile?.username ||
+                          post.profile?.email ||
+                          "ผู้ใช้งาน"}
                       </span>
                       <span className="text-xs text-gray-500">
                         {new Date(post.created_at).toLocaleString("th-TH")}
@@ -219,10 +255,10 @@ export default function MainDetail() {
                   {Array.isArray(post.files) &&
                     post.files.map((f, idx) => (
                       <div key={idx} className="mt-3">
-                        {f.type?.startsWith("image/") ? (
+                        {f.url?.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                           <img
                             src={f.url}
-                            alt={f.name}
+                            alt={f.name || "file"}
                             className="w-full rounded-lg object-contain"
                           />
                         ) : (
@@ -231,7 +267,7 @@ export default function MainDetail() {
                             download
                             className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2 inline-block"
                           >
-                            <BsDownload /> {f.name}
+                            <BsDownload /> {f.name || "ดาวน์โหลดไฟล์"}
                           </a>
                         )}
                       </div>
