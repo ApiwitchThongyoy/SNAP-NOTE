@@ -88,25 +88,31 @@ export default function CratePostDetail() {
         return;
       }
 
-      // ตรวจสอบว่า user มีข้อมูลใน table users
+      // ตรวจว่ามี user ใน table หรือยัง
       const { data: existingUser } = await supabase
-      .from("users")
-      .select("id")
-      .eq("id", user.id)
-      .single();
+        .from("users")
+        .select("id")
+        .eq("id", user.id)
+        .single();
 
-    if (!existingUser) {
-      // ถ้าไม่มีใน users → เพิ่มให้อัตโนมัติ
-      await supabase.from("users").insert([
-        {
-          id: user.id,
-          email: user.email,
-          username: user.user_metadata?.username || user.email.split("@")[0],
-          avatar_url: user.user_metadata?.avatar_url || null,
-          bio: "",
-        },
-      ]);
-    }
+      // ถ้าไม่มี → เพิ่ม
+      if (!existingUser) {
+        const { error: insertUserError } = await supabase.from("users").insert([
+          {
+            id: user.id,
+            email: user.email,
+            username: user.user_metadata?.username || user.email.split("@")[0],
+            avatar_url: user.user_metadata?.avatar_url || null,
+            bio: "",
+          },
+        ]);
+
+  if (insertUserError) {
+    console.error("❌ Failed to insert user:", insertUserError);
+    alert("ไม่สามารถเพิ่มข้อมูลผู้ใช้ได้");
+    return;
+  }
+}
 
       const fileUrls = [];
 

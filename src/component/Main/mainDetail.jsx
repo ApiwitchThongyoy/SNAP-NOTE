@@ -27,12 +27,22 @@ export default function MainDetail() {
     else setUser(data.user);
   };
 
-  // 🔹 โหลดโพสต์ทั้งหมด
+  // 🔹 โหลดโพสต์ทั้งหมด (พร้อมชื่อผู้ใช้)
   const fetchPosts = async () => {
     try {
       const { data, error } = await supabase
         .from("posts")
-        .select("*")
+        .select(`
+          id,
+          content,
+          files,
+          created_at,
+          user_id,
+          users (
+            username,
+            email
+          )
+        `)
         .order("created_at", { ascending: false });
       if (error) throw error;
       setPosts(data || []);
@@ -72,14 +82,12 @@ export default function MainDetail() {
     const isLiked = likes.includes(postId);
     try {
       if (isLiked) {
-        // ลบออกจาก like
         await supabase
           .from("likes")
           .delete()
           .match({ post_id: postId, user_id: user.id });
         setLikes(likes.filter((id) => id !== postId));
       } else {
-        // เพิ่ม like
         await supabase
           .from("likes")
           .insert([{ post_id: postId, user_id: user.id }]);
@@ -195,7 +203,9 @@ export default function MainDetail() {
                   <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
                     <BsPersonCircle size={40} className="text-gray-600" />
                     <div className="flex flex-col">
-                      <span className="font-semibold text-base">ผู้ใช้งาน</span>
+                      <span className="font-semibold text-base">
+                        {post.users?.username || post.users?.email || "ผู้ใช้งาน"}
+                      </span>
                       <span className="text-xs text-gray-500">
                         {new Date(post.created_at).toLocaleString("th-TH")}
                       </span>
