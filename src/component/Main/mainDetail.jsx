@@ -16,16 +16,28 @@ export default function MainDetail() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
-  const [saves, setSaves] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]); // ✅ เพิ่ม state สำหรับโพสต์ที่ถูกบันทึก
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 ระบบบันทึกแบบเพลย์ลิสต์
+  const [collections, setCollections] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [newCollectionName, setNewCollectionName] = useState("");
+
+  // ---------------------------
+  // ดึงข้อมูลผู้ใช้
+  // ---------------------------
   const fetchUser = async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error) console.error(error);
     else setUser(data.user);
   };
 
+  // ---------------------------
+  // ดึงโพสต์ทั้งหมด
+  // ---------------------------
   const fetchPosts = async () => {
     try {
       const { data: postsData, error: postsError } = await supabase
@@ -62,24 +74,39 @@ export default function MainDetail() {
     }
   };
 
+  // ---------------------------
+  // ดึงโพสต์ที่ถูกถูกใจ
+  // ---------------------------
   const fetchUserActions = async (userId) => {
     try {
       const { data: likeData } = await supabase
         .from("likes")
         .select("post_id")
         .eq("user_id", userId);
-      const { data: saveData } = await supabase
-        .from("saves")
-        .select("post_id")
-        .eq("user_id", userId);
 
       setLikes(likeData?.map((l) => l.post_id) || []);
-      setSaves(saveData?.map((s) => s.post_id) || []);
     } catch (err) {
       console.error("❌ Error fetching user actions:", err);
     }
   };
 
+  // ---------------------------
+  // ดึงโพสต์ที่ถูกบันทึก
+  // ---------------------------
+  const fetchSavedPosts = async (userId) => {
+    const { data, error } = await supabase
+      .from("collection_items")
+      .select("post_id")
+      .eq("user_id", userId);
+
+    if (!error && data) {
+      setSavedPosts(data.map((item) => item.post_id));
+    }
+  };
+
+  // ---------------------------
+  // กดถูกใจ / ยกเลิกถูกใจ
+  // ---------------------------
   const toggleLike = async (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ");
@@ -104,30 +131,56 @@ export default function MainDetail() {
     }
   };
 
-  const toggleSave = async (postId) => {
+  // ---------------------------
+  // ระบบ "บันทึกโพสต์" แบบเพลย์ลิสต์
+  // ---------------------------
+  const fetchCollections = async (userId) => {
+    const { data, error } = await supabase
+      .from("collections")
+      .select("*")
+      .eq("user_id", userId);
+    if (!error) setCollections(data);
+  };
+
+  // ✅ ใช้งานจริง (เปิด modal)
+  const openSaveModal = (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนบันทึกโพสต์");
       return;
     }
-    const isSaved = saves.includes(postId);
-    try {
-      if (isSaved) {
-        await supabase
-          .from("saves")
-          .delete()
-          .match({ post_id: postId, user_id: user.id });
-        setSaves(saves.filter((id) => id !== postId));
-      } else {
-        await supabase
-          .from("saves")
-          .insert([{ post_id: postId, user_id: user.id }]);
-        setSaves([...saves, postId]);
-      }
-    } catch (err) {
-      console.error("❌ Error toggling save:", err);
+    setSelectedPost(postId);
+    setShowModal(true);
+  };
+
+  const saveToCollection = async (collectionId) => {
+    if (!user || !selectedPost) return;
+
+    await supabase.from("collection_items").insert([
+      { collection_id: collectionId, post_id: selectedPost, user_id: user.id },
+    ]);
+
+    setSavedPosts([...savedPosts, selectedPost]);
+    setShowModal(false);
+    alert("✅ บันทึกโพสต์เรียบร้อยแล้ว");
+  };
+
+  const createNewCollection = async () => {
+    if (!newCollectionName.trim()) return alert("กรุณากรอกชื่อเพลย์ลิสต์");
+    const { data, error } = await supabase
+      .from("collections")
+      .insert([{ name: newCollectionName, user_id: user.id }])
+      .select()
+      .single();
+    if (!error && data) {
+      await saveToCollection(data.id);
+      setNewCollectionName("");
+      fetchCollections(user.id);
     }
   };
 
+  // ---------------------------
+  // useEffect
+  // ---------------------------
   useEffect(() => {
     const init = async () => {
       await fetchUser();
@@ -149,14 +202,20 @@ export default function MainDetail() {
         supabase.removeChannel(channel);
       };
     };
-
     init();
   }, []);
 
   useEffect(() => {
-    if (user) fetchUserActions(user.id);
+    if (user) {
+      fetchUserActions(user.id);
+      fetchCollections(user.id);
+      fetchSavedPosts(user.id);
+    }
   }, [user]);
 
+  // ---------------------------
+  // 🔹 UI หลัก
+  // ---------------------------
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
       {/* Header */}
@@ -251,7 +310,7 @@ export default function MainDetail() {
                   {/* Content */}
                   <p className="mt-2">{post.content}</p>
 
-                  {/* ✅ Files */}
+                  {/* Files */}
                   {Array.isArray(post.files) &&
                     post.files.map((f, idx) => (
                       <div key={idx} className="mt-3">
@@ -272,7 +331,7 @@ export default function MainDetail() {
                           <a
                             href={f.url}
                             download
-                            className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2 "
+                            className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2"
                           >
                             <BsDownload /> {f.name || "ดาวน์โหลดไฟล์"}
                           </a>
@@ -296,13 +355,13 @@ export default function MainDetail() {
 
                     <button
                       className={`flex items-center gap-2 px-3 py-1 rounded ${
-                        saves.includes(post.id)
-                          ? "bg-blue-500 text-white"
+                        savedPosts.includes(post.id)
+                          ? "bg-green-500 text-white"
                           : "bg-gray-200 text-black"
                       }`}
-                      onClick={() => toggleSave(post.id)}
+                      onClick={() => openSaveModal(post.id)}
                     >
-                      {saves.includes(post.id) ? (
+                      {savedPosts.includes(post.id) ? (
                         <BsBookmarkFill />
                       ) : (
                         <BsBookmark />
@@ -321,6 +380,49 @@ export default function MainDetail() {
           <AdCarousel />
         </div>
       </div>
+
+      {/* Modal "บันทึกไปยัง..." */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white text-black rounded-xl w-96 p-4">
+            <h2 className="text-lg font-bold mb-2">บันทึกไปยัง...</h2>
+            <div className="max-h-60 overflow-y-auto">
+              {collections.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => saveToCollection(c.id)}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-200 rounded"
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="border-t my-2 pt-2">
+              <input
+                type="text"
+                placeholder="ชื่อเพลย์ลิสต์ใหม่"
+                value={newCollectionName}
+                onChange={(e) => setNewCollectionName(e.target.value)}
+                className="w-full border p-2 rounded mb-2"
+              />
+              <button
+                onClick={createNewCollection}
+                className="bg-green-500 text-white w-full py-2 rounded"
+              >
+                ➕ สร้างเพลย์ลิสต์ใหม่
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-2 text-sm text-gray-600 underline w-full"
+            >
+              ยกเลิก
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,99 +1,153 @@
-import { useState, useEffect } from "react";
-import { BsBell, BsPersonCircle } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import {
+  BsBell,
+  BsPersonCircle,
+  BsDownload,
+  BsTrash,
+  BsPlusCircle,
+} from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { usePosts } from "../../context/usePosts";
+import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 
-// แปลงไฟล์เป็น Base64
-const toBase64 = (url, type) =>
-  fetch(url)
-    .then((res) => res.blob())
-    .then(
-      (blob) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve({ url: reader.result, type });
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        })
-    );
-
-function Collect_Detail() {
+export default function Collect_Detail() {
   const navigate = useNavigate();
-  const { posts, toggleSave } = usePosts();
-
+  const [, setUser] = useState(null);
   const [collections, setCollections] = useState([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedPosts, setSelectedPosts] = useState([]);
-  const [collectionName, setCollectionName] = useState("");
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [viewFile, setViewFile] = useState(null);
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  // โหลดคอลเลคชันจาก localStorage
+  // ✅ ดึงข้อมูลผู้ใช้
   useEffect(() => {
-    const saved = localStorage.getItem("collections");
-    if (saved) {
-      try {
-        setCollections(JSON.parse(saved));
-      } catch {
-        setCollections([]);
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (!error && data.user) {
+        setUser(data.user);
+        fetchCollections(data.user.id);
       }
-    }
+    };
+    fetchUser();
   }, []);
 
-  // บันทึกคอลเลคชันเมื่อมีการเปลี่ยนแปลง
-  useEffect(() => {
-    localStorage.setItem("collections", JSON.stringify(collections));
-  }, [collections]);
+  // ✅ ดึงเพลย์ลิสต์ทั้งหมดของผู้ใช้
+  const fetchCollections = async (userId) => {
+    const { data, error } = await supabase
+      .from("collections")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
-  // ✅ สร้างคอลเลคชันใหม่
-  const handleCreateCollection = async () => {
-    if (!collectionName.trim() || selectedPosts.length === 0) return;
-
-    // แปลงไฟล์ในโพสต์ที่เลือกเป็น Base64
-    const postsWithFiles = await Promise.all(
-      posts
-        .filter((p) => selectedPosts.includes(p.id))
-        .map(async (p) => {
-          const files = await Promise.all(
-            p.files.map(async (f) => {
-              if (f.url.startsWith("blob:")) {
-                return await toBase64(f.url, f.type);
-              }
-              return f; // ถ้าเป็น URL ปกติ (จาก server) ไม่ต้องแปลง
-            })
-          );
-          return { ...p, files };
-        })
-    );
-
-    const newCollection = {
-      id: Date.now(),
-      name: collectionName,
-      posts: postsWithFiles,
-    };
-
-    setCollections((prev) => [...prev, newCollection]);
-    setCollectionName("");
-    setSelectedPosts([]);
-    setShowCreateModal(false);
+    if (error) console.error("Error fetching collections:", error);
+    else setCollections(data);
   };
 
-  // ✅ ลบคอลเลคชัน
-  const handleDeleteCollection = (id) => {
-    setCollections((prev) => prev.filter((c) => c.id !== id));
-    setDeleteConfirm(null);
+  // ✅ ดึงโพสต์ในเพลย์ลิสต์ที่เลือก
+  const fetchPostsInCollection = async (collectionId) => {
+    setLoading(true);
+    const { data: items, error } = await supabase
+      .from("collection_items")
+      .select("post_id")
+      .eq("collection_id", collectionId);
+
+    if (error) {
+      console.error("Error fetching collection items:", error);
+      setLoading(false);
+      return;
+    }
+
+    if (!items || items.length === 0) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
+
+    const postIds = items.map((i) => i.post_id);
+
+    const { data: postsData, error: postsError } = await supabase
+      .from("posts")
+      .select("*, profiles(username, email, avatar_url)")
+      .in("id", postIds)
+      .order("created_at", { ascending: false });
+
+    if (!postsError) setPosts(postsData);
+    setLoading(false);
   };
 
-  // ✅ เลือกโพสต์ตอนสร้างคอลเลคชัน
-  const toggleSelectPost = (postId) => {
-    setSelectedPosts((prev) =>
-      prev.includes(postId)
-        ? prev.filter((id) => id !== postId)
-        : [...prev, postId]
-    );
+  // ✅ เพิ่มโพสต์เข้า collection
+  const addPostToCollection = async (collectionId, postId) => {
+    if (!collectionId || !postId) return;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setMessage("❌ กรุณาเข้าสู่ระบบก่อนเพิ่มโพสต์");
+      return;
+    }
+
+    const { error } = await supabase.from("collection_items").insert([
+      {
+        collection_id: collectionId,
+        post_id: postId,
+        user_id: user.id,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error adding post:", error);
+      setMessage("❌ เกิดข้อผิดพลาดในการเพิ่มโพสต์");
+    } else {
+      setMessage("✅ เพิ่มโพสต์เข้าเพลย์ลิสต์สำเร็จ");
+      fetchPostsInCollection(collectionId);
+    }
   };
 
+  // ✅ ลบโพสต์ออกจากเพลย์ลิสต์
+  const removePostFromCollection = async (postId) => {
+    if (!selectedCollection) return;
+    await supabase
+      .from("collection_items")
+      .delete()
+      .match({ collection_id: selectedCollection.id, post_id: postId });
+    fetchPostsInCollection(selectedCollection.id);
+  };
+
+  // ✅ ลบทั้งคอลเลกชัน
+  const removeCollection = async (collectionId) => {
+    if (!window.confirm("คุณต้องการลบเพลย์ลิสต์นี้หรือไม่? 🗑️")) return;
+
+    try {
+      // ลบรายการใน collection_items ก่อน (เพื่อไม่ให้ orphan data)
+      await supabase
+        .from("collection_items")
+        .delete()
+        .eq("collection_id", collectionId);
+
+      // ลบ collection หลัก
+      const { error } = await supabase
+        .from("collections")
+        .delete()
+        .eq("id", collectionId);
+
+      if (error) throw error;
+
+      // อัปเดตรายการใหม่
+      setCollections(collections.filter((c) => c.id !== collectionId));
+
+      // ถ้ากำลังดูคอลเลกชันนี้อยู่ ให้ล้างโพสต์ออก
+      if (selectedCollection?.id === collectionId) {
+        setSelectedCollection(null);
+        setPosts([]);
+      }
+
+      setMessage("🗑️ ลบเพลย์ลิสต์สำเร็จ");
+    } catch (err) {
+      console.error("❌ Error deleting collection:", err);
+      setMessage("❌ เกิดข้อผิดพลาดในการลบเพลย์ลิสต์");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -102,46 +156,46 @@ function Collect_Detail() {
         <div className="flex-1 max-w-lg mx-auto bg-[#7CFF70] rounded-3xl px-4 py-2">
           <input
             type="text"
-            placeholder="ค้นหา"
-            className="w-full rounded-3xl p-3 text-black"
+            placeholder="ค้นหาโพสต์ที่บันทึกไว้..."
+            className="w-full rounded-3xl p-3 text-black placeholder-gray-600"
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button className="cursor-pointer">
+          <button>
             <BsBell />
           </button>
-          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
+          <button onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
       </div>
 
-      {/* Body: Sidebar | Content | Ads */}
+      {/* Main Layout */}
       <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <div className="flex flex-col gap-6">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+          <div className="flex flex-col gap-4">
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="hover:bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+              className="bg-green-400 text-black rounded-3xl p-2"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 active:bg-green-500 text-black rounded-3xl p-2 cursor-pointer"
+            className="hover:bg-green-400 text-black rounded-3xl p-2"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -149,237 +203,165 @@ function Collect_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
-          {/* Collections */}
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">คอลเลคชันของคุณ</h2>
-            <button
-              className="bg-[#7CFF70] px-4 py-2 rounded-3xl text-black cursor-pointer"
-              onClick={() => setShowCreateModal(true)}
-            >
-              สร้าง +
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            {collections.length === 0 ? (
-              <p className="text-gray-300">ยังไม่มีคอลเลคชัน</p>
-            ) : (
-              collections.map((col) => (
-                <div
-                  key={col.id}
-                  className="bg-white text-black p-4 rounded-xl flex flex-col gap-2"
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-bold">{col.name}</h3>
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold mb-2">โพสต์ที่ถูกบันทึกของคุณ</h2>
+            <div className="flex flex-wrap gap-3">
+              {collections.length === 0 ? (
+                <p className="text-gray-300">ยังไม่มีเพลย์ลิสต์</p>
+              ) : (
+                collections.map((c) => (
+                  <div
+                    key={c.id}
+                    className="flex items-center gap-2 bg-gray-200 text-black px-4 py-2 rounded-full"
+                  >
                     <button
-                      className="text-red-500"
-                      onClick={() =>
-                        setDeleteConfirm({ type: "collection", id: col.id })
-                      }
+                      onClick={() => {
+                        setSelectedCollection(c);
+                        fetchPostsInCollection(c.id);
+                      }}
+                      className={`font-semibold ${
+                        selectedCollection?.id === c.id
+                          ? "text-green-600"
+                          : "text-black"
+                      }`}
                     >
-                      ❌ ลบ
+                      {c.name}
+                    </button>
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => removeCollection(c.id)}
+                    >
+                      <BsTrash />
                     </button>
                   </div>
+                ))
+              )}
+            </div>
+          </div>
 
-                  {/* แสดงโพสต์ในคอลเลคชัน */}
-                  <div className="grid grid-cols-2 gap-2">
-                    {col.posts.map((post) => (
-                      <div
-                        key={post.id}
-                        className="bg-gray-200 rounded p-2 flex flex-col items-center"
-                      >
-                        {post.files.length > 0 && (
-                          <>
-                            {post.files[0].type.startsWith("image/") ? (
-                              <img
-                                src={post.files[0].url}
-                                alt=""
-                                className="max-h-40 rounded cursor-pointer"
-                                onClick={() => setViewFile(post.files[0])}
-                              />
-                            ) : post.files[0].type.startsWith("video/") ? (
+          {/* โพสต์ในเพลย์ลิสต์ */}
+          {selectedCollection ? (
+            <>
+              <h2 className="text-lg font-bold mb-4">
+                📂 {selectedCollection.name}
+              </h2>
+              {message && <p className="text-green-400 mb-3">{message}</p>}
+              {loading ? (
+                <p>กำลังโหลด...</p>
+              ) : posts.length === 0 ? (
+                <p className="text-gray-300">ยังไม่มีโพสต์ที่ถูกบันทึก</p>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {posts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="bg-white text-black rounded-lg p-4 shadow"
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between pb-3 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                          {post.profiles?.avatar_url ? (
+                            <img
+                              src={post.profiles.avatar_url}
+                              alt="avatar"
+                              className="w-10 h-10 rounded-full object-cover border border-gray-400"
+                            />
+                          ) : (
+                            <BsPersonCircle size={36} className="text-gray-600" />
+                          )}
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-base">
+                              {post.profiles?.username ||
+                                post.profiles?.email ||
+                                "ผู้ใช้งาน"}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(post.created_at).toLocaleString("th-TH")}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button
+                            className="text-green-600 hover:text-green-800"
+                            onClick={() =>
+                              addPostToCollection(selectedCollection.id, post.id)
+                            }
+                          >
+                            <BsPlusCircle />
+                          </button>
+                          <button
+                            className="text-red-600 hover:text-red-800"
+                            onClick={() => removePostFromCollection(post.id)}
+                          >
+                            <BsTrash />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <p className="mt-2">{post.content}</p>
+
+                      {/* ✅ Files */}
+                      {(() => {
+                        let filesArray = [];
+                        try {
+                          if (post.files) {
+                            filesArray =
+                              typeof post.files === "string"
+                                ? JSON.parse(post.files)
+                                : post.files;
+                          }
+                        } catch (err) {
+                          console.error("Error parsing files:", err);
+                        }
+
+                        if (!Array.isArray(filesArray) || filesArray.length === 0)
+                          return null;
+
+                        return filesArray.map((f, idx) => (
+                          <div key={idx} className="mt-3">
+                            {f.url?.match(/\.(mp4|webm|ogg)$/i) ? (
                               <video
-                                src={post.files[0].url}
+                                src={f.url}
                                 controls
-                                className="max-h-40 rounded cursor-pointer"
-                                onClick={() => setViewFile(post.files[0])}
+                                className="w-full rounded-lg"
+                              />
+                            ) : f.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                              <img
+                                src={f.url}
+                                alt={f.name || "file"}
+                                className="w-full rounded-lg object-contain"
                               />
                             ) : (
-                              <p
-                                className="cursor-pointer underline"
-                                onClick={() => setViewFile(post.files[0])}
+                              <a
+                                href={f.url}
+                                download
+                                className="flex items-center gap-2 px-3 py-1 bg-green-500 text-white rounded mt-2"
                               >
-                                {post.files[0].name}
-                              </p>
+                                <BsDownload /> {f.name || "ดาวน์โหลดไฟล์"}
+                              </a>
                             )}
-                          </>
-                        )}
-                        <p className="text-sm mt-2">{post.text}</p>
-                        <button
-                          className="text-red-500 mt-2 "
-                          onClick={() => toggleSave(post.id)}>
-                          ❌ ลบบันทึก
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Saved Posts ต้องแก้*/}
-          <h2 className="text-xl font-bold mt-6">โพสต์ที่คุณบันทึก</h2>
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            {posts
-              .filter((p) => p.saved)
-              .map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-white text-black rounded-xl p-4 flex flex-col"
-                >
-                  {post.files.map((file, fi) => (
-                    <div key={fi} className="mb-2">
-                      {file.type.startsWith("image/") ? (
-                        <img
-                          src={file.url}
-                          alt=""
-                          className="max-h-40 rounded cursor-pointer"
-                          onClick={() => setViewFile(file)}
-                        />
-                      ) : file.type.startsWith("video/") ? (
-                        <video
-                          src={file.url}
-                          controls
-                          className="max-h-40 rounded cursor-pointer"
-                          onClick={() => setViewFile(file)}
-                        />
-                      ) : (
-                        <p
-                          className="cursor-pointer underline"
-                          onClick={() => setViewFile(file)}
-                        >
-                          {file.name}
-                        </p>
-                      )}
+                          </div>
+                        ));
+                      })()}
                     </div>
                   ))}
-                  <p>{post.text}</p>
-                  <button
-                    className="text-red-500 mt-2 rounded-3xl p-2  hover:bg-red-200 active:bg-red-300 cursor-pointer"
-                    onClick={() => toggleSave(post.id)}
-                  >
-                    ❌ ลบบันทึก
-                  </button>
                 </div>
-              ))}
-          </div>
+              )}
+            </>
+          ) : (
+            <p className="text-gray-300 mt-20 text-center">
+              🔍 กรุณาเลือกเพลย์ลิสต์ด้านบนเพื่อดูโพสต์ที่บันทึกไว้
+            </p>
+          )}
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
-          <AdCarousel/>
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+          <AdCarousel />
         </div>
       </div>
-
-      {/* Modal สร้างคอลเลคชัน */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[500px] text-black">
-            <h2 className="text-lg font-bold mb-4">สร้างคอลเลคชันใหม่</h2>
-            <input
-              type="text"
-              placeholder="ชื่อคอลเลคชัน"
-              value={collectionName}
-              onChange={(e) => setCollectionName(e.target.value)}
-              className="border p-2 w-full rounded mb-4"
-            />
-            <div className="max-h-40 overflow-auto mb-4">
-              {posts
-                .filter((p) => p.saved)
-                .map((post) => (
-                  <label key={post.id} className="flex gap-2 items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedPosts.includes(post.id)}
-                      onChange={() => toggleSelectPost(post.id)}
-                    />
-                    <span>{post.text}</span>
-                  </label>
-                ))}
-            </div>
-            <div className="flex gap-4 justify-end">
-              <button
-                className="bg-gray-400 px-4 py-2 rounded"
-                onClick={() => setShowCreateModal(false)}
-              >
-                ยกเลิก
-              </button>
-              <button
-                className="bg-green-500 px-4 py-2 rounded text-white"
-                onClick={handleCreateCollection}
-              >
-                ยืนยัน
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal ยืนยันลบ */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl text-black">
-            <p className="mb-4">คุณต้องการลบคอลเลคชันนี้ใช่หรือไม่?</p>
-            <div className="flex gap-4 justify-end">
-              <button
-                className="bg-gray-400 px-4 py-2 rounded"
-                onClick={() => setDeleteConfirm(null)}
-              >
-                ยกเลิก
-              </button>
-              <button
-                className="bg-red-500 px-4 py-2 rounded text-white"
-                onClick={() => handleDeleteCollection(deleteConfirm.id)}
-              >
-                ยืนยัน
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal ดูไฟล์ */}
-      {viewFile && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-          onClick={() => setViewFile(null)}
-        >
-          <div
-            className="bg-white p-4 rounded-xl max-w-3xl max-h-[80vh] overflow-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {viewFile.type.startsWith("image/") ? (
-              <img
-                src={viewFile.url}
-                alt={viewFile.name}
-                className="max-w-full max-h-[70vh] rounded"
-              />
-            ) : viewFile.type.startsWith("video/") ? (
-              <video
-                src={viewFile.url}
-                controls
-                className="max-w-full max-h-[70vh] rounded"
-              />
-            ) : (
-              <p className="text-black">{viewFile.name}</p>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
-
-export default Collect_Detail;
