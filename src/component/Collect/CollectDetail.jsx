@@ -173,7 +173,7 @@ export default function Collect_Detail() {
       {/* Main Layout */}
       <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-4">
             <button
               className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
@@ -203,7 +203,7 @@ export default function Collect_Detail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           <div className="mb-6">
             <h2 className="text-xl font-bold mb-2">โพสต์ที่ถูกบันทึกของคุณ</h2>
             <div className="flex flex-wrap gap-3">
@@ -358,7 +358,7 @@ export default function Collect_Detail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <AdCarousel />
         </div>
       </div>
