@@ -6,11 +6,13 @@ export default function NotificationBell({ userId }) {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
 
-  // โหลดแจ้งเตือนตอนเริ่มต้น
   useEffect(() => {
     if (!userId) return;
+
+    // โหลดแจ้งเตือนเริ่มต้น
     NotificationService.fetchNotifications(userId).then(setNotifications);
 
+    // ฟัง realtime แจ้งเตือนใหม่
     const unsubscribe = NotificationService.listenToNotifications(
       userId,
       (newNoti) => setNotifications((prev) => [newNoti, ...prev])
@@ -49,7 +51,7 @@ export default function NotificationBell({ userId }) {
                   {noti.message}
                   <br />
                   <span className="text-xs text-black">
-                    {new Date(noti.created_at).toLocaleString()}
+                    {new Date(noti.created_at).toLocaleString("th-TH")}
                   </span>
                 </li>
               ))

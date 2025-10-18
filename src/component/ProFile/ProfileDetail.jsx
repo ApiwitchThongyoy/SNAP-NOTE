@@ -90,19 +90,46 @@ function ProfileDetail() {
       .replace(/[^a-zA-Z0-9._-]/g, "_");
 
   // ✅ toggle like/unlike
-  const toggleLike = async (postId) => {
-    if (!user) return;
-    const alreadyLiked = likedPostIds.includes(postId);
+    const toggleLike = async (postId) => {
+      // ✅ ดึง user ปัจจุบันสด ๆ ทุกครั้งก่อน insert
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (!currentUser) {
+        console.error("No user found or not logged in");
+        return;
+      }
 
-    if (alreadyLiked) {
-      await supabase.from("likes").delete().eq("user_id", user.id).eq("post_id", postId);
-      setLikedPostIds((prev) => prev.filter((id) => id !== postId));
-      setLikedPosts((prev) => prev.filter((p) => p.id !== postId)); // ลบออกจากแท็บถูกใจ
-    } else {
-      await supabase.from("likes").insert([{ user_id: user.id, post_id: postId }]);
-      setLikedPostIds((prev) => [...prev, postId]);
-    }
-  };
+      const alreadyLiked = likedPostIds.includes(postId);
+
+      if (alreadyLiked) {
+        // ✅ Unlike
+        const { error } = await supabase
+          .from("likes")
+          .delete()
+          .eq("user_id", currentUser.id)
+          .eq("post_id", postId);
+
+        if (error) {
+          console.error("Unlike error:", error);
+        } else {
+          setLikedPostIds((prev) => prev.filter((id) => id !== postId));
+          setLikedPosts((prev) => prev.filter((p) => p.id !== postId));
+        }
+      } else {
+        // ✅ Like
+        const { data, error } = await supabase
+          .from("likes")
+          .insert([{ post_id: postId, user_id: currentUser.id }])
+          .select();
+
+        if (error) {
+          console.error("Insert like error:", error);
+        } else {
+          console.log("Like inserted:", data);
+          setLikedPostIds((prev) => [...prev, postId]);
+        }
+      }
+    };
+
 
   const handleProfileImgChange = async (e) => {
     const file = e.target.files[0];
