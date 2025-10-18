@@ -31,7 +31,7 @@ function UploadButtons({ handleFiles }) {
   return (
     <div>
       <label className="bg-gradient-to-r from-red-400 to-red-600 text-white px-6 py-3 rounded-full cursor-pointer hover:shadow-lg transition">
-        ✨ เพิ่มไฟล์สวยๆ หรือวิดีโอ
+        เพิ่มไฟล์ หรือ วิดีโอ
         <input
           type="file"
           multiple
@@ -53,7 +53,7 @@ function UploadButtons({ handleFiles }) {
                 {file.name} ({formatFileSize(file.size)})
               </span>
               <button
-                className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 cursor-pointer"
                 onClick={() => removeFile(index)}
               >
                 ลบ
@@ -180,19 +180,19 @@ export default function CratePostDetail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
@@ -200,7 +200,7 @@ export default function CratePostDetail() {
           </div>
 
           <button
-            className="hover:bg-green-400 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
