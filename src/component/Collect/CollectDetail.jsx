@@ -163,8 +163,10 @@ export default function Collect_Detail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer">
+            <BsBell />
+          </button>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -176,26 +178,26 @@ export default function Collect_Detail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-4">
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="bg-green-400 text-black rounded-3xl p-2"
+              className="bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -213,14 +215,14 @@ export default function Collect_Detail() {
                 collections.map((c) => (
                   <div
                     key={c.id}
-                    className="flex items-center gap-2 bg-gray-200 text-black px-4 py-2 rounded-full"
+                    className="flex items-center gap-2 bg-gray-200 text-black px-4 py-2 rounded-full "
                   >
                     <button
                       onClick={() => {
                         setSelectedCollection(c);
                         fetchPostsInCollection(c.id);
                       }}
-                      className={`font-semibold ${
+                      className={`font-semibold cursor-pointer ${
                         selectedCollection?.id === c.id
                           ? "text-green-600"
                           : "text-black"
@@ -229,7 +231,7 @@ export default function Collect_Detail() {
                       {c.name}
                     </button>
                     <button
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 cursor-pointer"
                       onClick={() => removeCollection(c.id)}
                     >
                       <BsTrash />
@@ -283,7 +285,7 @@ export default function Collect_Detail() {
                         </div>
                         <div className="flex gap-3">
                           <button
-                            className="text-green-600 hover:text-green-800"
+                            className="text-green-600 hover:text-green-800 cursor-pointer"
                             onClick={() =>
                               addPostToCollection(selectedCollection.id, post.id)
                             }
@@ -291,7 +293,7 @@ export default function Collect_Detail() {
                             <BsPlusCircle />
                           </button>
                           <button
-                            className="text-red-600 hover:text-red-800"
+                            className="text-red-600 hover:text-red-800 cursor-pointer"
                             onClick={() => removePostFromCollection(post.id)}
                           >
                             <BsTrash />

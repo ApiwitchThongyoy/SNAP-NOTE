@@ -169,7 +169,7 @@ function ProfileDetail() {
       </div>
 
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2">หน้าหลัก</button>
             <button onClick={() => navigate("/crate-post")} className="hover:bg-green-400 text-black rounded-3xl p-2">โพสต์</button>
@@ -178,9 +178,9 @@ function ProfileDetail() {
           <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2">ตั้งค่า</button>
         </div>
 
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto sticky top-4 max-h-[calc(95.7vh-6rem)]">
           {/* ✅ Profile Info */}
-          <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6">
+          <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6 ">
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
                 <img src={profileImg} alt="profile" className="w-full h-full object-cover" />
@@ -301,7 +301,7 @@ function ProfileDetail() {
                 }))}
         </div>
 
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <AdCarousel />
         </div>
       </div>
