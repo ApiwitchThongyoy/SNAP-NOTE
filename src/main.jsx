@@ -17,7 +17,7 @@ import { PostProvider } from './context/PostProvider.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import VerifyEmail from './component/SignUp/VerifyEmail.jsx'
 import UpdatePassword from './component/Resetpassword/UpdatePassword.jsx';
-import Notifications from "./page/Notifications.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -64,10 +64,7 @@ const router = createBrowserRouter([
   },{
   path: "/update-password",
   element: <UpdatePassword />
-},{
-    path: "/notifications", // ✅ เส้นทางใหม่
-    element: <Notifications />,
-  }
+}
 
 ])
 createRoot(document.getElementById('root')).render(

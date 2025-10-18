@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
+import NotificationBell from "../NotificationBell/NotificationBell";
 
 export default function MainDetail() {
   const navigate = useNavigate();
@@ -273,9 +274,11 @@ export default function MainDetail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button onClick={() => navigate("/notifications")}>
-            <BsBell />
-          </button>
+          {user ? (
+              <NotificationBell userId={user.id} />
+            ) : (
+              <BsBell size={24} className="text-gray-500" />
+            )}
           <button onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
