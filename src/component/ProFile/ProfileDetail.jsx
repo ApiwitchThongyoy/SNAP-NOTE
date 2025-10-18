@@ -201,11 +201,11 @@ function ProfileDetail() {
         {/* ✅ Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
-            <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2">หน้าหลัก</button>
-            <button onClick={() => navigate("/crate-post")} className="hover:bg-green-400 text-black rounded-3xl p-2">โพสต์</button>
-            <button onClick={() => navigate("/collect-post")} className="hover:bg-green-400 text-black rounded-3xl p-2">บันทึก</button>
+            <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">หน้าหลัก</button>
+            <button onClick={() => navigate("/crate-post")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">โพสต์</button>
+            <button onClick={() => navigate("/collect-post")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">บันทึก</button>
           </div>
-          <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2">ตั้งค่า</button>
+          <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">ตั้งค่า</button>
         </div>
 
         <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto sticky top-4 max-h-[calc(95.7vh-6rem)]">
@@ -215,7 +215,7 @@ function ProfileDetail() {
               <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-400">
                 <img src={profileImg} alt="profile" className="w-full h-full object-cover" />
               </div>
-              <label className="mt-2 w-28 text-sm cursor-pointer text-center">
+              <label className="mt-2 w-28 text-sm cursor-pointer text-center ">
                 แก้ไขรูปภาพ
                 <input type="file" accept="image/*" className="hidden" onChange={handleProfileImgChange} />
               </label>
@@ -235,13 +235,13 @@ function ProfileDetail() {
           {/* Tabs */}
           <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
             <button
-              className={`${tab === "myPosts" ? "border-b-2 border-green-500 font-semibold" : "text-gray-300"}`}
+              className={`${tab === "myPosts" ? "border-b-2 border-green-500 font-semibold" : "text-gray-300 cursor-pointer"}`}
               onClick={() => setTab("myPosts")}
             >
               โพสต์ของฉัน
             </button>
             <button
-              className={`${tab === "likedPosts" ? "border-b-2 border-green-500 font-semibold" : "text-gray-300"}`}
+              className={`${tab === "likedPosts" ? "border-b-2 border-green-500 font-semibold" : "text-gray-300 cursor-pointer"}`}
               onClick={() => setTab("likedPosts")}
             >
               ถูกใจ
@@ -263,8 +263,8 @@ function ProfileDetail() {
                           <textarea className="w-full border rounded p-2 text-black" value={editText} onChange={(e) => setEditText(e.target.value)} />
                           <input type="file" onChange={handleFileChange} className="mt-2" />
                           <div className="flex gap-2 mt-2">
-                            <button onClick={() => handleSaveEdit(post.id)} className="px-4 py-2 bg-green-500 rounded">บันทึก</button>
-                            <button onClick={() => setEditIndex(null)} className="px-4 py-2 bg-gray-500 rounded">ยกเลิก</button>
+                            <button onClick={() => handleSaveEdit(post.id)} className="px-4 py-2 bg-green-500 rounded cursor-pointer">บันทึก</button>
+                            <button onClick={() => setEditIndex(null)} className="px-4 py-2 bg-gray-500 rounded cursor-pointer">ยกเลิก</button>
                           </div>
                         </>
                       ) : (
@@ -279,15 +279,15 @@ function ProfileDetail() {
                                   <video key={i} src={file.url} controls className="w-60 rounded-lg border border-gray-600" />
                                 ) : (
                                   <a key={i} href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline">
-                                    📎 {file.name}
+                                     {file.name}
                                   </a>
                                 )
                               )}
                             </div>
                           )}
                           <div className="flex gap-2 mt-2 items-center">
-                            <button onClick={() => handleEdit(index, post.content)} className="px-3 py-1 bg-blue-500 rounded">แก้ไข</button>
-                            <button onClick={() => handleDeletePost(post.id)} className="px-3 py-1 bg-red-500 rounded">ลบ</button>
+                            <button onClick={() => handleEdit(index, post.content)} className="px-3 py-1 bg-blue-500 rounded cursor-pointer">แก้ไข</button>
+                            <button onClick={() => handleDeletePost(post.id)} className="px-3 py-1 bg-red-500 rounded cursor-pointer">ลบ</button>
                             <button onClick={() => toggleLike(post.id)} className="text-xl">
                               {likedPostIds.includes(post.id) ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-gray-300" />}
                             </button>
