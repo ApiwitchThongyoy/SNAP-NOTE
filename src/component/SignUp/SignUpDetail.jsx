@@ -82,7 +82,7 @@ function SignUpDetail() {
         console.error("Insert Profile Error:", insertError.message);
         alert("สมัครสมาชิกสำเร็จ แต่ไม่สามารถบันทึกข้อมูลเพิ่มเติมได้");
       } else {
-        alert("สมัครสมาชิกสำเร็จ 🎉");
+        alert("สมัครสมาชิกสำเร็จ");
       }
 
       // ล้างค่า input ทั้งหมด
@@ -103,7 +103,7 @@ function SignUpDetail() {
     <div className="relative flex min-h-screen bg-[#56A750]">
       {/* ปุ่มย้อนกลับ */}
       <button
-        className="absolute top-4 right-20 text-6xl text-[#164C11] z-50"
+        className="absolute top-4 right-20 text-6xl text-[#164C11] z-50 cursor-pointer"
         onClick={() => navigate(-1)}
       >
         <BsArrowLeftCircleFill />
@@ -154,7 +154,7 @@ function SignUpDetail() {
 
           <button
             type="submit"
-            className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 font-bold"
+            className="w-[550px] bg-[#164C11] text-white py-3 rounded hover:bg-green-600 font-bold cursor-pointer"
           >
             Sign Up
           </button>
