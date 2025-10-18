@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import NotificationBell from "../NotificationBell/NotificationBell";
 
 function ProfileDetail() {
   const navigate = useNavigate();
@@ -158,7 +159,11 @@ function ProfileDetail() {
           <input type="text" placeholder="ค้นหา" className="w-full rounded-3xl p-3 text-black" />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <BsBell />
+          {user ? (
+            <NotificationBell userId={user.id} />
+            ) : (
+            <BsBell size={24} className="text-gray-500" />
+          )}
           <BsPersonCircle onClick={() => navigate("/profile")} className="cursor-pointer" />
         </div>
       </div>

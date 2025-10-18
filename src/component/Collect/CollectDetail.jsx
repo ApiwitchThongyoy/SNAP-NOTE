@@ -9,6 +9,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
+import NotificationBell from "../NotificationBell/NotificationBell";
+
 
 export default function Collect_Detail() {
   const navigate = useNavigate();
@@ -161,9 +163,7 @@ export default function Collect_Detail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button>
-            <BsBell />
-          </button>
+          
           <button onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
