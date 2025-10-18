@@ -279,7 +279,7 @@ export default function MainDetail() {
             ) : (
               <BsBell size={24} className="text-gray-500" />
             )}
-          <button onClick={() => navigate("/profile")}>
+          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
         </div>
@@ -291,26 +291,26 @@ export default function MainDetail() {
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl">
           <div className="flex flex-col gap-6">
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/main-page")}
             >
               หน้าหลัก
             </button>
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/crate-post")}
             >
               โพสต์
             </button>
             <button
-              className="hover:bg-green-400 text-black rounded-3xl p-2"
+              className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
               onClick={() => navigate("/collect-post")}
             >
               บันทึก
             </button>
           </div>
           <button
-            className="hover:bg-green-400 text-black rounded-3xl p-2"
+            className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer"
             onClick={() => navigate("/setting")}
           >
             ตั้งค่า
@@ -390,7 +390,7 @@ export default function MainDetail() {
                   {/* Buttons */}
                   <div className="flex gap-2 mt-3">
                     <button
-                      className={`flex items-center gap-2 px-3 py-1 rounded ${
+                      className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
                         likes.includes(post.id)
                           ? "bg-red-500 text-white"
                           : "bg-gray-200 text-black"
@@ -402,7 +402,7 @@ export default function MainDetail() {
                     </button>
 
                     <button
-                      className={`flex items-center gap-2 px-3 py-1 rounded ${
+                      className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
                         savedPosts.includes(post.id)
                           ? "bg-green-500 text-white"
                           : "bg-gray-200 text-black"
