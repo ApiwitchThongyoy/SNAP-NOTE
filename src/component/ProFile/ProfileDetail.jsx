@@ -178,7 +178,7 @@ function ProfileDetail() {
           <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2">ตั้งค่า</button>
         </div>
 
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           {/* ✅ Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6 ">
             <div className="flex flex-col items-center">
