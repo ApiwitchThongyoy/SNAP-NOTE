@@ -27,6 +27,7 @@ function ProfileDetail() {
 
       setUser(user);
 
+      // ✅ โหลดข้อมูลโปรไฟล์
       const { data: profileData } = await supabase
         .from("profiles")
         .select("*")
@@ -39,6 +40,7 @@ function ProfileDetail() {
         setProfileImg(profileData.avatar_url || "https://placekitten.com/200/200");
       }
 
+      // ✅ โหลดโพสต์ของฉัน
       const { data: postsData } = await supabase
         .from("posts")
         .select("*")
@@ -47,14 +49,34 @@ function ProfileDetail() {
 
       setPosts(postsData || []);
 
-      const { data: likedData } = await supabase
+      // ✅ โหลดโพสต์ที่ถูกใจ
+      const { data: likedData, error: likeError } = await supabase
         .from("likes")
-        .select("post_id, posts(*)")
+        .select("post_id")
         .eq("user_id", user.id);
 
-      if (likedData) {
-        setLikedPosts(likedData.map((l) => l.posts));
-        setLikedPostIds(likedData.map((l) => l.post_id));
+      console.log("likedData:", likedData);
+      console.log("Supabase error:", likeError);
+
+      if (likedData && likedData.length > 0) {
+        const postIds = likedData.map((l) => l.post_id);
+
+        // ✅ ดึงข้อมูลโพสต์ที่ถูกใจ พร้อมโปรไฟล์ผู้โพสต์
+        const { data: postsLikedData, error: postError } = await supabase
+          .from("posts")
+          .select(`
+            *,
+            profiles!posts_user_id_fkey(username, avatar_url)
+          `)
+          .in("id", postIds);
+
+        if (postError) console.error(postError);
+
+        setLikedPosts(postsLikedData || []);
+        setLikedPostIds(postIds);
+      } else {
+        setLikedPosts([]);
+        setLikedPostIds([]);
       }
     };
 
@@ -62,7 +84,8 @@ function ProfileDetail() {
   }, []);
 
   const sanitizeFileName = (name) =>
-    name.normalize("NFD")
+    name
+      .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-zA-Z0-9._-]/g, "_");
 
@@ -74,7 +97,7 @@ function ProfileDetail() {
     if (alreadyLiked) {
       await supabase.from("likes").delete().eq("user_id", user.id).eq("post_id", postId);
       setLikedPostIds((prev) => prev.filter((id) => id !== postId));
-      setLikedPosts((prev) => prev.filter((p) => p.id !== postId)); // 💥 remove from liked tab
+      setLikedPosts((prev) => prev.filter((p) => p.id !== postId)); // ลบออกจากแท็บถูกใจ
     } else {
       await supabase.from("likes").insert([{ user_id: user.id, post_id: postId }]);
       setLikedPostIds((prev) => [...prev, postId]);
@@ -95,7 +118,10 @@ function ProfileDetail() {
 
     if (uploadError) return alert("❌ อัปโหลดรูปไม่สำเร็จ");
 
-    const { data: urlData } = supabase.storage.from("profile_avatars").getPublicUrl(filePath);
+    const { data: urlData } = supabase.storage
+      .from("profile_avatars")
+      .getPublicUrl(filePath);
+
     const publicUrl = urlData.publicUrl;
 
     await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", user.id);
@@ -133,12 +159,15 @@ function ProfileDetail() {
 
       if (uploadError) return alert("❌ ไม่สามารถอัปโหลดไฟล์ได้");
 
-      const { data: urlData } = supabase.storage.from("post_files").getPublicUrl(filePath);
+      const { data: urlData } = supabase.storage
+        .from("post_files")
+        .getPublicUrl(filePath);
       fileUrl = urlData.publicUrl;
     }
 
     const updateData = { content: editText };
-    if (fileUrl) updateData.files = JSON.stringify([{ url: fileUrl, name: editFile.name }]);
+    if (fileUrl)
+      updateData.files = JSON.stringify([{ url: fileUrl, name: editFile.name }]);
 
     await supabase.from("posts").update(updateData).eq("id", postId);
     setEditIndex(null);
@@ -161,7 +190,7 @@ function ProfileDetail() {
         <div className="flex gap-10 text-3xl mr-25">
           {user ? (
             <NotificationBell userId={user.id} />
-            ) : (
+          ) : (
             <BsBell size={24} className="text-gray-500" />
           )}
           <BsPersonCircle onClick={() => navigate("/profile")} className="cursor-pointer" />
@@ -169,6 +198,7 @@ function ProfileDetail() {
       </div>
 
       <div className="flex flex-1 h-full w-full gap-6 px-6 py-4 text-2xl">
+        {/* ✅ Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2">หน้าหลัก</button>
@@ -178,7 +208,7 @@ function ProfileDetail() {
           <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2">ตั้งค่า</button>
         </div>
 
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto sticky top-4 max-h-[calc(95.7vh-6rem)]">
           {/* ✅ Profile Info */}
           <div className="bg-[#434343] rounded-xl p-6 flex gap-6 items-center mb-6 ">
             <div className="flex flex-col items-center">
@@ -202,7 +232,7 @@ function ProfileDetail() {
             </div>
           </div>
 
-          {/* ✅ Tabs */}
+          {/* Tabs */}
           <div className="flex gap-10 border-b border-gray-500 pb-2 mb-4">
             <button
               className={`${tab === "myPosts" ? "border-b-2 border-green-500 font-semibold" : "text-gray-300"}`}
@@ -218,7 +248,7 @@ function ProfileDetail() {
             </button>
           </div>
 
-          {/* ✅ Render Posts */}
+          {/* ✅ My Posts */}
           {tab === "myPosts"
             ? (posts.length === 0
               ? <p className="text-center text-gray-400 mt-6">ยังไม่มีโพสต์ของคุณ</p>
@@ -267,40 +297,47 @@ function ProfileDetail() {
                     </div>
                   );
                 }))
-            : (likedPosts.length === 0
-              ? <p className="text-center text-gray-400 mt-6">ยังไม่มีโพสต์ที่ถูกใจ</p>
-              : likedPosts.map((post) => {
-                  let files = [];
-                  try { files = typeof post.files === "string" ? JSON.parse(post.files) : post.files || []; } catch { files = []; }
+            : (
+              likedPosts.length === 0
+                ? <p className="text-center text-gray-400 mt-6">ยังไม่มีโพสต์ที่ถูกใจ</p>
+                : likedPosts.map((post) => {
+                    let files = [];
+                    try { files = typeof post.files === "string" ? JSON.parse(post.files) : post.files || []; } catch { files = []; }
 
-                  return (
-                    <div key={post.id} className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4">
-                      <p>{post.content}</p>
-                      {files.length > 0 && (
-                        <div className="flex flex-wrap gap-3 mt-2">
-                          {files.map((file, i) =>
-                            file.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-                              <img key={i} src={file.url} alt={file.name} className="w-40 h-40 object-cover rounded-lg border border-gray-600" />
-                            ) : file.url?.match(/\.(mp4|mov|webm)$/i) ? (
-                              <video key={i} src={file.url} controls className="w-60 rounded-lg border border-gray-600" />
-                            ) : (
-                              <a key={i} href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline">
-                                📎 {file.name}
-                              </a>
-                            )
-                          )}
-                        </div>
-                      )}
-                      <button onClick={() => toggleLike(post.id)} className="mt-2 text-xl">
-                        {likedPostIds.includes(post.id)
-                          ? <FaHeart className="text-red-500" />
-                          : <FaRegHeart className="text-gray-300" />}
-                      </button>
-                    </div>
-                  );
-                }))}
+                    return (
+                      <div key={post.id} className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4">
+                        {/* แสดงชื่อผู้โพสต์ */}
+                        <p className="font-semibold text-green-300">
+                          {post.profiles?.username || "ไม่ทราบชื่อผู้ใช้"}
+                        </p>
+                        <p>{post.content}</p>
+                        {files.length > 0 && (
+                          <div className="flex flex-wrap gap-3 mt-2">
+                            {files.map((file, i) =>
+                              file.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                                <img key={i} src={file.url} alt={file.name} className="w-40 h-40 object-cover rounded-lg border border-gray-600" />
+                              ) : file.url?.match(/\.(mp4|mov|webm)$/i) ? (
+                                <video key={i} src={file.url} controls className="w-60 rounded-lg border border-gray-600" />
+                              ) : (
+                                <a key={i} href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline">
+                                  📎 {file.name}
+                                </a>
+                              )
+                            )}
+                          </div>
+                        )}
+                        <button onClick={() => toggleLike(post.id)} className="mt-2 text-xl">
+                          {likedPostIds.includes(post.id)
+                            ? <FaHeart className="text-red-500" />
+                            : <FaRegHeart className="text-gray-300" />}
+                        </button>
+                      </div>
+                    );
+                  })
+            )}
         </div>
 
+        {/* ✅ Ads Sidebar */}
         <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <AdCarousel />
         </div>
