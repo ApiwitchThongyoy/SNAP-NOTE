@@ -318,7 +318,7 @@ export default function MainDetail() {
         </div>
 
         {/* Content */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto sticky top-4 max-h-[calc(95.7vh-6rem)]">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           <h2 className="text-xl font-bold mb-4">โพสต์ล่าสุด</h2>
 
           {loading ? (
