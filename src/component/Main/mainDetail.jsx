@@ -16,11 +16,11 @@ export default function MainDetail() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
-  const [savedPosts, setSavedPosts] = useState([]); // ✅ เพิ่ม state สำหรับโพสต์ที่ถูกบันทึก
+  const [savedPosts, setSavedPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 ระบบบันทึกแบบเพลย์ลิสต์
+  // ระบบเพลย์ลิสต์ (collection)
   const [collections, setCollections] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -83,7 +83,6 @@ export default function MainDetail() {
         .from("likes")
         .select("post_id")
         .eq("user_id", userId);
-
       setLikes(likeData?.map((l) => l.post_id) || []);
     } catch (err) {
       console.error("❌ Error fetching user actions:", err);
@@ -105,7 +104,23 @@ export default function MainDetail() {
   };
 
   // ---------------------------
-  // กดถูกใจ / ยกเลิกถูกใจ
+  // สร้างการแจ้งเตือน
+  // ---------------------------
+  const createNotification = async (targetUserId, postId, type, message) => {
+    if (!user || user.id === targetUserId) return; // ไม่แจ้งเตือนตัวเอง
+    await supabase.from("notifications").insert([
+      {
+        user_id: targetUserId,
+        sender_id: user.id,
+        post_id: postId,
+        type,
+        message,
+      },
+    ]);
+  };
+
+  // ---------------------------
+  // ถูกใจ / ยกเลิกถูกใจ
   // ---------------------------
   const toggleLike = async (postId) => {
     if (!user) {
@@ -125,6 +140,17 @@ export default function MainDetail() {
           .from("likes")
           .insert([{ post_id: postId, user_id: user.id }]);
         setLikes([...likes, postId]);
+
+        // ✅ สร้างแจ้งเตือนให้เจ้าของโพสต์
+        const targetPost = posts.find((p) => p.id === postId);
+        if (targetPost) {
+          await createNotification(
+            targetPost.user_id,
+            postId,
+            "like",
+            `${user.email} กดถูกใจโพสต์ของคุณ`
+          );
+        }
       }
     } catch (err) {
       console.error("❌ Error toggling like:", err);
@@ -132,7 +158,7 @@ export default function MainDetail() {
   };
 
   // ---------------------------
-  // ระบบ "บันทึกโพสต์" แบบเพลย์ลิสต์
+  // ดึงคอลเลกชัน
   // ---------------------------
   const fetchCollections = async (userId) => {
     const { data, error } = await supabase
@@ -142,7 +168,9 @@ export default function MainDetail() {
     if (!error) setCollections(data);
   };
 
-  // ✅ ใช้งานจริง (เปิด modal)
+  // ---------------------------
+  // เปิด modal สำหรับบันทึก
+  // ---------------------------
   const openSaveModal = (postId) => {
     if (!user) {
       alert("กรุณาเข้าสู่ระบบก่อนบันทึกโพสต์");
@@ -152,6 +180,9 @@ export default function MainDetail() {
     setShowModal(true);
   };
 
+  // ---------------------------
+  // บันทึกโพสต์ไปยัง collection
+  // ---------------------------
   const saveToCollection = async (collectionId) => {
     if (!user || !selectedPost) return;
 
@@ -162,8 +193,22 @@ export default function MainDetail() {
     setSavedPosts([...savedPosts, selectedPost]);
     setShowModal(false);
     alert("✅ บันทึกโพสต์เรียบร้อยแล้ว");
+
+    // ✅ แจ้งเตือนเจ้าของโพสต์
+    const targetPost = posts.find((p) => p.id === selectedPost);
+    if (targetPost) {
+      await createNotification(
+        targetPost.user_id,
+        selectedPost,
+        "save",
+        `${user.email} บันทึกโพสต์ของคุณ`
+      );
+    }
   };
 
+  // ---------------------------
+  // สร้างคอลเลกชันใหม่
+  // ---------------------------
   const createNewCollection = async () => {
     if (!newCollectionName.trim()) return alert("กรุณากรอกชื่อเพลย์ลิสต์");
     const { data, error } = await supabase
@@ -214,7 +259,7 @@ export default function MainDetail() {
   }, [user]);
 
   // ---------------------------
-  // 🔹 UI หลัก
+  // UI หลัก
   // ---------------------------
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -228,7 +273,7 @@ export default function MainDetail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button>
+          <button onClick={() => navigate("/notifications")}>
             <BsBell />
           </button>
           <button onClick={() => navigate("/profile")}>
