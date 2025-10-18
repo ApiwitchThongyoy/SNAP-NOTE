@@ -19,7 +19,7 @@ function SettingDetail() {
         </div>
 
         {/* Icons */}
-        <div className="flex gap-6 text-3xl">
+        <div className="flex gap-10 text-3xl mr-25">
           <button className="cursor-pointer" onClick={() => {}}>
             <BsBell />
           </button>

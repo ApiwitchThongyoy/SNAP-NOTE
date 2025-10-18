@@ -9,7 +9,6 @@ import CratePost from './page/CratePost.jsx';
 import Collect from './page/Collect.jsx';
 import Setting from './page/Setting.jsx';
 import ProFile from './page/ProFile.jsx';
-import ProFile_like from './page/Profile_like.jsx';
 import Setting_account from './page/Setting_account.jsx';
 import Setting_message from './page/Setting_message.jsx';
 import Setting_private from './page/Setting_private.jsx';
@@ -18,6 +17,7 @@ import { PostProvider } from './context/PostProvider.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import VerifyEmail from './component/SignUp/VerifyEmail.jsx'
 import UpdatePassword from './component/Resetpassword/UpdatePassword.jsx';
+import Notifications from "./page/Notifications.jsx";
 
 const router = createBrowserRouter([
   {
@@ -50,9 +50,6 @@ const router = createBrowserRouter([
     path:"/profile",
     element:<ProFile />
   },{
-    path:"/profile-like",
-    element:<ProFile_like/>
-  },{
     path:"/settingaaccount",
     element:<Setting_account />
   },{
@@ -67,7 +64,10 @@ const router = createBrowserRouter([
   },{
   path: "/update-password",
   element: <UpdatePassword />
-}
+},{
+    path: "/notifications", // ✅ เส้นทางใหม่
+    element: <Notifications />,
+  }
 
 ])
 createRoot(document.getElementById('root')).render(

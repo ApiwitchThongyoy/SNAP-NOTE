@@ -102,7 +102,7 @@ function LoginDetail() {
             type="submit"
             disabled={loading}
             className={`w-[550px] bg-[#164C11] text-white py-3 rounded font-bold transition-colors ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-green-600"
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-green-600 cursor-pointer"
             }`}
           >
             {loading ? "กำลังเข้าสู่ระบบ..." : "Sign in"}
