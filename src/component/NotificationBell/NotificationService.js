@@ -45,13 +45,13 @@ export function listenToNotifications(userId, onNewNotification) {
         .eq("id", payload.new.post_id)
         .single();
 
-      if (data?.user_id === userId) {
-        const message = `มีคนกดไลก์โพสต์ของคุณ`;
-        const noti = await addNotification(userId, message);
-        onNewNotification(noti);
-      }
+      if (!data) return;
+      const message = `มีคนกดไลก์โพสต์ของคุณ`;
+      const noti = await addNotification(data.user_id, message); // ส่งถึงเจ้าของโพสต์
+      onNewNotification(noti);
     })
     .subscribe();
+
 
   return () => {
     supabase.removeChannel(postChannel);
