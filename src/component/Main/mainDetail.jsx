@@ -273,11 +273,11 @@ export default function MainDetail() {
             className="w-full rounded-3xl p-3 text-black"
           />
         </div>
-        <div className="flex gap-10 text-3xl mr-25">
+        <div className="flex gap-10 text-3xl mr-25 cursor-pointer">
           {user ? (
               <NotificationBell userId={user.id} />
             ) : (
-              <BsBell size={24} className="text-gray-500" />
+              <BsBell size={24} className="text-gray-500 " />
             )}
           <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
