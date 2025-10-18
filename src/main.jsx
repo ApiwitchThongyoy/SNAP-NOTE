@@ -9,9 +9,7 @@ import CratePost from './page/CratePost.jsx';
 import Collect from './page/Collect.jsx';
 import Setting from './page/Setting.jsx';
 import ProFile from './page/ProFile.jsx';
-import Setting_account from './page/Setting_account.jsx';
 import Setting_message from './page/Setting_message.jsx';
-import Setting_private from './page/Setting_private.jsx';
 import './index.css';
 import { PostProvider } from './context/PostProvider.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
@@ -50,14 +48,8 @@ const router = createBrowserRouter([
     path:"/profile",
     element:<ProFile />
   },{
-    path:"/settingaaccount",
-    element:<Setting_account />
-  },{
     path:"/settingmessage",
     element:<Setting_message />
-  },{
-    path:"/settingprivate",
-    element:<Setting_private/>
   },{
     path:"/verify-email",
     element:<VerifyEmail/>
