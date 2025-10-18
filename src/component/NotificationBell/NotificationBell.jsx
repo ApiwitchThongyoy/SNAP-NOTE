@@ -23,7 +23,7 @@ export default function NotificationBell({ userId }) {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative text-gray-700 hover:text-black"
+        className="relative text-white hover:text-white"
       >
         <BsBell size={24} />
         {notifications.some((n) => !n.is_read) && (
@@ -35,7 +35,7 @@ export default function NotificationBell({ userId }) {
         <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl border">
           <ul className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
-              <li className="p-3 text-sm text-gray-400 text-center">
+              <li className="p-3 text-sm text-black text-center">
                 ไม่มีการแจ้งเตือน
               </li>
             ) : (
@@ -48,7 +48,7 @@ export default function NotificationBell({ userId }) {
                 >
                   {noti.message}
                   <br />
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-black">
                     {new Date(noti.created_at).toLocaleString()}
                   </span>
                 </li>
