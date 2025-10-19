@@ -2,10 +2,28 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdCarousel from "../Ads/AdsDetail";
+import { supabase } from "../../supabaseClient";
 
 function Setting_messageDetail() {
   const [followNotify, setFollowNotify] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("ออกจากระบบไม่สำเร็จ:", error.message);
+      alert("ออกจากระบบไม่สำเร็จ ลองอีกครั้งนะ!");
+      return;
+    }
+
+    alert("ออกจากระบบสำเร็จ 🎉");
+    navigate("/Login-Detail", { replace: true });
+  } catch (err) {
+    console.error("เกิดข้อผิดพลาดระหว่างออกจากระบบ:", err.message);
+  }
+};
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-black text-white">
@@ -78,7 +96,7 @@ function Setting_messageDetail() {
               >
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl bg-red-500 hover:bg-red-600 active:bg-red-600 p-2 text-sm cursor-pointer mt-8">
+              <button className="w-full rounded-3xl bg-red-500 hover:bg-red-600 active:bg-red-600 p-2 text-sm cursor-pointer mt-8" onClick={handleLogout}>
                 ออกจากระบบ
               </button>
             </div>
