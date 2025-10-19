@@ -19,7 +19,7 @@ import UpdatePassword from './component/Resetpassword/UpdatePassword.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "/Login-Detail",
+    path: "/",
     element:<Login />
   },
   {
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
   },{
   path: "/update-password",
   element: <UpdatePassword />
-}
+  }
 
 ])
 createRoot(document.getElementById('root')).render(
