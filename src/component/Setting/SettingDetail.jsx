@@ -2,9 +2,34 @@ import { BsBell, BsPersonCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import AdCarousel from "../Ads/AdsDetail";
 import { supabase } from "../../supabaseClient";
+import { useState, useEffect } from "react";
 
 function SettingDetail() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        setUser(user);
+
+        const { data: profileData, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (!error && profileData) setProfile(profileData);
+      } catch (err) {
+        console.error("Failed to load user/profile:", err);
+      }
+    };
+
+    init();
+  }, []);
 
   const handleLogout = async () => {
   try {
@@ -104,8 +129,15 @@ function SettingDetail() {
           {/* Right Panel' */}
           <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
             <h2 className="font-bold text-lg">ข้อมูลส่วนตัว</h2>
-            <p className="mt-5 text-lg">ชื่อ</p>
-            <p className="mt-5 text-lg">อีเมล</p>
+            <p className="mt-5 text-lg flex justify-between items-center">
+              <span>ชื่อ</span>
+              <span className="text-gray-500">{profile?.username || profile?.full_name || (user?.email ? user.email.split("@")[0] : "")}</span>
+            </p>
+            <p className="mt-5 text-lg flex justify-between items-center">
+              <span>อีเมล</span>
+              <span className="text-gray-500">{user?.email || "ไม่ได้ระบุ"}</span>
+            </p>
+            
           </div>
         </div>
 
