@@ -1,8 +1,9 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
+import NotificationBell from "../NotificationBell/NotificationBell";
 
 
 function UploadButtons({ handleFiles }) {
@@ -71,6 +72,7 @@ export default function CratePostDetail() {
   const navigate = useNavigate();
   const [postText, setPostText] = useState("");
   const [files, setFiles] = useState([]);
+  const [user, setUser] = useState(null);
 
   const handleFiles = (newFiles) => setFiles(newFiles);
 
@@ -78,6 +80,17 @@ export default function CratePostDetail() {
     const ext = file.name.split(".").pop();
     return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${ext}`;
   };
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (!error && data?.user) {
+        setUser(data.user);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleCreatePost = async () => {
     try {
@@ -165,7 +178,11 @@ export default function CratePostDetail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-
+          {user ? (
+                      <NotificationBell userId={user.id} />
+                    ) : (
+                      <BsBell size={24} className="text-gray-500" />
+                    )}
           <button
             className="cursor-pointer"
             onClick={() => navigate("/profile")}
