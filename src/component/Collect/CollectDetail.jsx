@@ -5,12 +5,12 @@ import {
   BsDownload,
   BsTrash,
   BsPlusCircle,
+  BsFolder2Open,
 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 import NotificationBell from "../NotificationBell/NotificationBell";
-
 
 export default function Collect_Detail() {
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ export default function Collect_Detail() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  
 
   // ✅ ดึงข้อมูลผู้ใช้
   useEffect(() => {
@@ -46,12 +45,16 @@ export default function Collect_Detail() {
     else setCollections(data);
   };
 
-  // ✅ ดึงโพสต์ในเพลย์ลิสต์ที่เลือก
+  // ✅ ดึงโพสต์ในคอลเลกชัน (แบบ join)
   const fetchPostsInCollection = async (collectionId) => {
     setLoading(true);
-    const { data: items, error } = await supabase
+    const { data, error } = await supabase
       .from("collection_items")
-      .select("post_id")
+      .select(`
+        id,
+        post_id,
+        posts(*, profiles(username, email, avatar_url))
+      `)
       .eq("collection_id", collectionId);
 
     if (error) {
@@ -60,21 +63,9 @@ export default function Collect_Detail() {
       return;
     }
 
-    if (!items || items.length === 0) {
-      setPosts([]);
-      setLoading(false);
-      return;
-    }
-
-    const postIds = items.map((i) => i.post_id);
-
-    const { data: postsData, error: postsError } = await supabase
-      .from("posts")
-      .select("*, profiles(username, email, avatar_url)")
-      .in("id", postIds)
-      .order("created_at", { ascending: false });
-
-    if (!postsError) setPosts(postsData);
+    // ✅ ดึงเฉพาะ posts ออกมา
+    const postList = data.map((item) => item.posts).filter(Boolean);
+    setPosts(postList);
     setLoading(false);
   };
 
@@ -122,13 +113,11 @@ export default function Collect_Detail() {
     if (!window.confirm("คุณต้องการลบเพลย์ลิสต์นี้หรือไม่? 🗑️")) return;
 
     try {
-      // ลบรายการใน collection_items ก่อน (เพื่อไม่ให้ orphan data)
       await supabase
         .from("collection_items")
         .delete()
         .eq("collection_id", collectionId);
 
-      // ลบ collection หลัก
       const { error } = await supabase
         .from("collections")
         .delete()
@@ -136,10 +125,8 @@ export default function Collect_Detail() {
 
       if (error) throw error;
 
-      // อัปเดตรายการใหม่
       setCollections(collections.filter((c) => c.id !== collectionId));
 
-      // ถ้ากำลังดูคอลเลกชันนี้อยู่ ให้ล้างโพสต์ออก
       if (selectedCollection?.id === collectionId) {
         setSelectedCollection(null);
         setPosts([]);
@@ -164,14 +151,15 @@ export default function Collect_Detail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button className="cursor-pointer">
-            {user ? (
-              <NotificationBell userId={user.id} />
-                ) : (
-              <BsBell size={24} className="text-gray-500 " />
-            )}
-          </button>
-          <button className="cursor-pointer" onClick={() => navigate("/profile")}>
+          {user ? (
+            <NotificationBell userId={user.id} />
+          ) : (
+            <BsBell size={24} className="text-gray-500 " />
+          )}
+          <button
+            className="cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
             <BsPersonCircle />
           </button>
         </div>
@@ -220,7 +208,7 @@ export default function Collect_Detail() {
                 collections.map((c) => (
                   <div
                     key={c.id}
-                    className="flex items-center gap-2 bg-gray-200 text-black px-4 py-2 rounded-full "
+                    className="flex items-center gap-2 bg-gray-200 text-black px-4 py-2 rounded-full"
                   >
                     <button
                       onClick={() => {
@@ -233,6 +221,7 @@ export default function Collect_Detail() {
                           : "text-black"
                       }`}
                     >
+                      <BsFolder2Open className="inline-block mr-2" />
                       {c.name}
                     </button>
                     <button
@@ -359,7 +348,7 @@ export default function Collect_Detail() {
             </>
           ) : (
             <p className="text-gray-300 mt-20 text-center">
-               กรุณาเลือกเพลย์ลิสต์ด้านบนเพื่อดูโพสต์ที่บันทึกไว้
+              กรุณาเลือกเพลย์ลิสต์ด้านบนเพื่อดูโพสต์ที่บันทึกไว้
             </p>
           )}
         </div>
