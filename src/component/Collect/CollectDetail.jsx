@@ -14,12 +14,13 @@ import NotificationBell from "../NotificationBell/NotificationBell";
 
 export default function Collect_Detail() {
   const navigate = useNavigate();
-  const [, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  
 
   // ✅ ดึงข้อมูลผู้ใช้
   useEffect(() => {
@@ -164,7 +165,11 @@ export default function Collect_Detail() {
         </div>
         <div className="flex gap-10 text-3xl mr-25">
           <button className="cursor-pointer">
-            <BsBell />
+            {user ? (
+              <NotificationBell userId={user.id} />
+                ) : (
+              <BsBell size={24} className="text-gray-500 " />
+            )}
           </button>
           <button className="cursor-pointer" onClick={() => navigate("/profile")}>
             <BsPersonCircle />
