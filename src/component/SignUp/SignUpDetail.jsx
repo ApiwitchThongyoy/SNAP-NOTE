@@ -14,84 +14,62 @@ function SignUpDetail() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🧩 ตรวจสอบว่ากรอกครบทุกช่อง
     if (!username || !email || !password || !confirmPassword) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
       return;
     }
 
-    // 🧩 ตรวจสอบว่ารหัสผ่านตรงกันไหม
     if (password !== confirmPassword) {
       alert("รหัสผ่านไม่ตรงกัน");
       return;
     }
 
     try {
-      // ✅ ตรวจสอบว่าอีเมลนี้มีอยู่ใน profiles แล้วหรือยัง
-      const { data: existingProfiles, error: checkError } = await supabase
+      // 🔹 ตรวจสอบว่าอีเมลมีอยู่ใน profiles แล้วหรือยัง
+      const { data: existingUser, error: userCheckError } = await supabase
         .from("profiles")
         .select("email")
-        .eq("email", email);
+        .eq("email", email)
+        .maybeSingle();
 
-      if (checkError) {
-        console.error("Database Check Error:", checkError.message);
+      if (userCheckError) {
+        console.error("Database Check Error:", userCheckError.message);
         alert("เกิดข้อผิดพลาดในการตรวจสอบอีเมล");
         return;
       }
 
-      if (existingProfiles.length > 0) {
+      if (existingUser) {
         alert("อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น");
         return;
       }
 
-      // ✅ สมัครสมาชิกใหม่โดยไม่ต้องส่งอีเมลยืนยัน (ปิด SMTP ได้)
-      const { data, error } = await supabase.auth.signUp({
+      // ✅ สมัครสมาชิกใหม่ (Supabase จะส่งอีเมลยืนยันไปให้)
+      const { data: _signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { username },
-          // ไม่ใช้ redirectTo เพราะเราไม่ต้องการ email verification
+          emailRedirectTo: window.location.origin + "/verify-email",
         },
       });
 
-      if (error) {
-        console.error("Signup Error:", error);
-        alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
+      if (signUpError) {
+        console.error("Signup Error:", signUpError.message);
+        alert("สมัครสมาชิกไม่สำเร็จ: " + signUpError.message);
         return;
       }
 
-      const user = data.user;
-      if (!user) {
-        alert("ไม่สามารถสร้างบัญชีได้ กรุณาลองใหม่อีกครั้ง");
-        return;
-      }
+      // 🔹 แจ้งผู้ใช้ให้ตรวจสอบอีเมล
+      alert("สมัครสมาชิกสำเร็จ! 🎉 กรุณาตรวจสอบอีเมลของคุณเพื่อยืนยันก่อนเข้าสู่ระบบ");
+      navigate("/");
 
-      // ✅ เพิ่มข้อมูลเข้า profiles หลังสมัครสำเร็จ
-      const { error: insertError } = await supabase.from("profiles").insert([
-        {
-          id: user.id,
-          username,
-          email,
-          bio: "EMPTY",
-          avatar_url: "https://ncrwckupxlkyfsfkamcn.supabase.co/storage/v1/object/public/avatars/default.png",
-          created_at: new Date(),
-        },
-      ]);
-
-      if (insertError) {
-        console.error("Insert Profile Error:", insertError.message);
-        alert("สมัครสมาชิกสำเร็จ แต่ไม่สามารถบันทึกข้อมูลเพิ่มเติมได้");
-      } else {
-        alert("สมัครสมาชิกสำเร็จ");
-      }
-
-      // ล้างค่า input ทั้งหมด
+      // ✅ เคลียร์ฟอร์ม
       setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
 
-      // กลับไปหน้า login
+      // ✅ ส่งผู้ใช้ไปหน้า Login
       navigate("/");
     } catch (err) {
       console.error("Unexpected Error:", err);
@@ -109,16 +87,12 @@ function SignUpDetail() {
         <BsArrowLeftCircleFill />
       </button>
 
-      {/* โลโก้ด้านซ้าย */}
+      {/* รูปฝั่งซ้าย */}
       <div className="absolute left-0 top-0 h-full">
-        <img
-          src={Logo_Login}
-          alt="left-side"
-          className="w-full h-full object-cover"
-        />
+        <img src={Logo_Login} alt="left-side" className="w-full h-full object-cover" />
       </div>
 
-      {/* ฟอร์มสมัคร */}
+      {/* ส่วนฟอร์ม */}
       <div className="ml-auto w-1/2 p-8 flex flex-col justify-center z-10">
         <h1 className="text-3xl font-bold mb-6 text-[#164C11]">Sign Up</h1>
 

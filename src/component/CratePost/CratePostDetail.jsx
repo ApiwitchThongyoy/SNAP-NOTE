@@ -32,7 +32,7 @@ function UploadButtons({ handleFiles }) {
 
   return (
     <div>
-      <label className="bg-gradient-to-r from-red-400 to-red-600 text-white px-6 py-3 rounded-full cursor-pointer hover:shadow-lg transition">
+      <label className="bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-3 rounded-full cursor-pointer hover:shadow-lg transition">
         เพิ่มไฟล์ หรือ วิดีโอ
         <input
           type="file"
@@ -235,7 +235,7 @@ export default function CratePostDetail() {
             />
             <button
               onClick={handleCreatePost}
-              className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 cursor-pointer shadow-blue-500/50 shadow-lg"
+              className="mt-4 bg-green-400 text-white px-6 py-2 rounded-lg hover:bg-green-400 amber-50cursor-pointer shadow-blue-500/50 shadow-lg"
             >
               สร้างโพสต์
             </button>

@@ -289,7 +289,6 @@ function ProfileDetail() {
                             <button onClick={() => handleEdit(index, post.content)} className="px-3 py-1 bg-blue-500 rounded cursor-pointer">แก้ไข</button>
                             <button onClick={() => handleDeletePost(post.id)} className="px-3 py-1 bg-red-500 rounded cursor-pointer">ลบ</button>
                             <button onClick={() => toggleLike(post.id)} className="text-xl">
-                              {likedPostIds.includes(post.id) ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-gray-300" />}
                             </button>
                           </div>
                         </>
@@ -307,9 +306,19 @@ function ProfileDetail() {
                     return (
                       <div key={post.id} className="bg-[#636363] rounded-lg p-4 flex flex-col gap-2 mb-4">
                         {/* แสดงชื่อผู้โพสต์ */}
-                        <p className="font-semibold text-green-300">
-                          {post.profiles?.username || "ไม่ทราบชื่อผู้ใช้"}
-                        </p>
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={
+                              post.profiles?.avatar_url ||
+                              "https://via.placeholder.com/40?text=User"
+                            }
+                            alt="avatar"
+                            className="w-10 h-10 rounded-full border border-gray-500 object-cover"
+                          />
+                          <p className="font-semibold text-gray-300">
+                            {post.profiles?.username || "ไม่ทราบชื่อผู้ใช้"}
+                          </p>
+                        </div>
                         <p>{post.content}</p>
                         {files.length > 0 && (
                           <div className="flex flex-wrap gap-3 mt-2">
