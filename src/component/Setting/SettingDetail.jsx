@@ -73,37 +73,21 @@ function SettingDetail() {
                 ทั่วไป
               </button>
               <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("/settingaaccount")}
-              >
-                สลับบัญชี
-              </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
               onClick={() => navigate("/settingmessage")}
               >
                 การแจ้งเตือน
               </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("/settingprivate")}
-              >
-                ความเป็นส่วนตัว
-              </button>
-            </div>
-
-            <h2 className="font-semibold mt-4 mb-2">ความเป็นส่วนตัวและนโยบาย</h2>
-            <div className="flex flex-col gap-2">
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
-                การแจ้งเตือน
-              </button>
-              <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
-                ความเป็นส่วนตัว
+              <button className="w-full rounded-3xl bg-red-500 hover:bg-red-600 active:bg-red-600 p-2 text-sm cursor-pointer mt-8">
+                ออกจากระบบ
               </button>
             </div>
           </div>
 
           {/* Right Panel' */}
           <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
-            <h2 className="font-bold text-lg">ธีมของเว็บ</h2>
-            <p className="mt-5 text-lg">โทนสว่าง</p>
+            <h2 className="font-bold text-lg">ข้อมูลส่วนตัว</h2>
+            <p className="mt-5 text-lg">ชื่อ</p>
+            <p className="mt-5 text-lg">อีเมล</p>
           </div>
         </div>
 
