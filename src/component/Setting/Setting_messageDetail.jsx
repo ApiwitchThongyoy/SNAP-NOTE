@@ -19,7 +19,7 @@ function Setting_messageDetail() {
     }
 
     alert("ออกจากระบบสำเร็จ 🎉");
-    navigate("/Login-Detail", { replace: true });
+    navigate("/", { replace: true });
   } catch (err) {
     console.error("เกิดข้อผิดพลาดระหว่างออกจากระบบ:", err.message);
   }

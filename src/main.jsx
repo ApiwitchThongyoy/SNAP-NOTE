@@ -56,7 +56,7 @@ const router = createBrowserRouter([
   },{
   path: "/update-password",
   element: <UpdatePassword />
-}
+  }
 
 ])
 createRoot(document.getElementById('root')).render(
