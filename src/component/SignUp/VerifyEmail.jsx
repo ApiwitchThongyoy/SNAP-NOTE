@@ -8,34 +8,39 @@ function VerifyEmail() {
 
   useEffect(() => {
     async function verifyEmail() {
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const token = hashParams.get("token_hash");
-      const type = hashParams.get("type") || "signup";
+      try {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const access_token = hashParams.get("access_token");
+        const refresh_token = hashParams.get("refresh_token");
+        // ✅ ตรวจสอบว่ามี token ไหม
+        if (!access_token || !refresh_token) {
+          setMessage("❌ ลิงก์ยืนยันอีเมลไม่ถูกต้องหรือหมดอายุ");
+          return;
+        }
 
-      // ✅ ถ้าไม่มี token ให้ลองตรวจสอบ user ปัจจุบันแทน
-      if (!token) {
-        const { data } = await supabase.auth.getUser();
-        if (data?.user?.email_confirmed_at) {
-          setMessage("✅ อีเมลของคุณได้รับการยืนยันแล้ว!");
+        // ✅ ตั้ง session ใหม่ด้วย token ที่ได้จาก Supabase
+        const { error } = await supabase.auth.setSession({
+          access_token,
+          refresh_token,
+        });
+
+        if (error) {
+          console.error("Set session error:", error);
+          setMessage("❌ ไม่สามารถเข้าสู่ระบบหลังยืนยันอีเมลได้");
+          return;
+        }
+
+        // ✅ ตรวจสอบสถานะผู้ใช้หลังยืนยัน
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData?.user?.email_confirmed_at) {
+          setMessage("✅ อีเมลของคุณได้รับการยืนยันเรียบร้อยแล้ว!");
           setTimeout(() => navigate("/"), 1000);
         } else {
-          setMessage("❌ ไม่พบ token ในลิงก์ หรือ ลิงก์ไม่ถูกต้อง");
+          setMessage("❌ การยืนยันอีเมลไม่สำเร็จ");
         }
-        return;
-      }
-
-      // ✅ ถ้ามี token ก็ verify ปกติ
-      const { error } = await supabase.auth.verifyOtp({
-        type,
-        token_hash: token,
-      });
-
-      if (error) {
-        console.error("Verification error:", error);
-        setMessage("❌ ลิงก์ยืนยันอีเมลไม่ถูกต้องหรือหมดอายุ");
-      } else {
-        setMessage("✅ อีเมลของคุณได้รับการยืนยันเรียบร้อยแล้ว!");
-        setTimeout(() => navigate("/"), 3000);
+      } catch (err) {
+        console.error("Unexpected error:", err);
+        setMessage("❌ เกิดข้อผิดพลาดในการตรวจสอบอีเมล");
       }
     }
 
