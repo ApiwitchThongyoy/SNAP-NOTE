@@ -281,7 +281,7 @@ export default function MainDetail() {
       {/* Content */}
       <div className="flex flex-1 w-full gap-6 px-6 py-4 text-2xl">
         {/* Sidebar */}
-        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4">
+        <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
             <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2">
               หน้าหลัก
@@ -299,7 +299,7 @@ export default function MainDetail() {
         </div>
 
         {/* Posts */}
-        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto">
+        <div className="w-3/5 bg-[#434343] p-6 rounded-xl flex flex-col overflow-y-auto max-h-[calc(95.7vh-6rem)]">
           <h2 className="text-xl font-bold mb-4">โพสต์ล่าสุด</h2>
 
           {loading ? (
@@ -365,7 +365,7 @@ export default function MainDetail() {
         </div>
 
         {/* Ads */}
-        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4">
+        <div className="w-1/5 bg-[#434343] p-6 flex items-center justify-center rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <AdCarousel />
         </div>
       </div>
