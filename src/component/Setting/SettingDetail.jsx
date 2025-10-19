@@ -84,7 +84,7 @@ function SettingDetail() {
             </div>
           </div>
 
-          {/* Right Panel */}
+          {/* Right Panel' */}
           <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
             <h2 className="font-bold text-lg">ข้อมูลส่วนตัว</h2>
             <p className="mt-5 text-lg">ชื่อ</p>
