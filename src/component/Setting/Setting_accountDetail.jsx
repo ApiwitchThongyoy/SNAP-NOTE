@@ -1,10 +1,8 @@
 import { BsBell, BsPersonCircle } from "react-icons/bs";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdCarousel from "../Ads/AdsDetail";
 
-function Setting_messageDetail() {
-  const [followNotify, setFollowNotify] = useState(false);
+function Setting_accountDetail() {
   const navigate = useNavigate();
 
   return (
@@ -20,7 +18,7 @@ function Setting_messageDetail() {
           />
         </div>
         {/* Icons */}
-        <div className="flex gap-10 text-3xl mr-25">
+       <div className="flex gap-10 text-3xl mr-25">
           <button className="cursor-pointer" onClick={() => {}}>
             <BsBell />
           </button>
@@ -74,12 +72,12 @@ function Setting_messageDetail() {
                 ทั่วไป
               </button>
               <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("/settingaaccount")}
+              onClick={() => navigate("")}
               >
                 สลับบัญชี
               </button>
               <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("")}
+              onClick={() => navigate("/settingmessage")}
               >
                 การแจ้งเตือน
               </button>
@@ -101,27 +99,20 @@ function Setting_messageDetail() {
           </div>
 
           {/* Right Panel */}
-          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4 ">
-            <h2 className="font-bold text-lg mb-2">การติดตาม</h2>
-            <p className="mb-5 text-lg">
-              แจ้งให้ทราบเมื่อมีคนมาติดตาม
-            </p>
-            <div className="flex items-center gap-3 mb-5 ">
-              <span className="text-base text-black">ปิด</span>
-              <button
-                onClick={() => setFollowNotify(!followNotify)}
-                className={`w-14 h-7 rounded-full flex items-center transition-colors duration-300 cursor-pointer ${
-                  followNotify ? "bg-green-500" : "bg-gray-400"
-                }`}
-              >
-                <div
-                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                    followNotify ? "translate-x-7" : "translate-x-0 cursor-pointer"
-                  }`}
-                ></div>
-              </button>
-              <span className="text-base text-black">เปิด</span>
-            </div>
+          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
+            <h2 className="font-bold text-lg mb-2">บัญชี</h2>
+            <p className="mb-5 text-lg">account 1</p>
+            <h1 className="font-bold text-lg mb-2">บัญชีอื่นๆ</h1>
+            <p className="mb-2 text-lg">account 2</p>
+            <p className="mb-2 text-lg">account 3</p>
+            <p className="mb-2 text-lg">account 4</p>
+            <h1 className="font-bold text-lg mb-2 ">เกี่ยวกับบัญชี</h1>
+            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm mb-2 cursor-pointer">
+              + เพิ่มบัญชี
+            </button>
+            <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer">
+              จัดการบัญชี
+            </button>
           </div>
         </div>
 
@@ -134,4 +125,4 @@ function Setting_messageDetail() {
   );
 }
 
-export default Setting_messageDetail;
+export default Setting_accountDetail;

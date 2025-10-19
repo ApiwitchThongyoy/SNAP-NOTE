@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdCarousel from "../Ads/AdsDetail";
 
-function Setting_messageDetail() {
+function Setting_privateDetail() {
   const [followNotify, setFollowNotify] = useState(false);
   const navigate = useNavigate();
 
@@ -79,12 +79,12 @@ function Setting_messageDetail() {
                 สลับบัญชี
               </button>
               <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("")}
+              onClick={() => navigate("/settingmessage")}
               >
                 การแจ้งเตือน
               </button>
               <button className="w-full rounded-3xl hover:bg-gray-200 active:bg-gray-300 p-2 text-sm cursor-pointer"
-              onClick={() => navigate("/settingprivate")}
+              onClick={() => navigate("")}
               >
                 ความเป็นส่วนตัว
               </button>
@@ -101,12 +101,12 @@ function Setting_messageDetail() {
           </div>
 
           {/* Right Panel */}
-          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4 ">
-            <h2 className="font-bold text-lg mb-2">การติดตาม</h2>
+          <div className="w-1/2 bg-amber-50 text-black rounded-lg p-4">
+            <h2 className="font-bold text-lg mb-2">อนุญาตให้ผู้ใช้พูดถึงฉัน</h2>
             <p className="mb-5 text-lg">
-              แจ้งให้ทราบเมื่อมีคนมาติดตาม
+              ทุกคนจะสามารถพูดถึงคุณในทุกโพสต์และความคิดเห็น
             </p>
-            <div className="flex items-center gap-3 mb-5 ">
+            <div className="flex items-center gap-3 mb-5">
               <span className="text-base text-black">ปิด</span>
               <button
                 onClick={() => setFollowNotify(!followNotify)}
@@ -115,8 +115,8 @@ function Setting_messageDetail() {
                 }`}
               >
                 <div
-                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                    followNotify ? "translate-x-7" : "translate-x-0 cursor-pointer"
+                  className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 cursor-pointer ${
+                    followNotify ? "translate-x-7" : "translate-x-0"
                   }`}
                 ></div>
               </button>
@@ -134,4 +134,4 @@ function Setting_messageDetail() {
   );
 }
 
-export default Setting_messageDetail;
+export default Setting_privateDetail;

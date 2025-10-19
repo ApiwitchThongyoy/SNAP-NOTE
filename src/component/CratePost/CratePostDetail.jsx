@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
 
+
 function UploadButtons({ handleFiles }) {
   const [fileData, setFileData] = useState([]);
 
@@ -164,9 +165,7 @@ export default function CratePostDetail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25">
-          <button className="cursor-pointer">
-            <BsBell />
-          </button>
+
           <button
             className="cursor-pointer"
             onClick={() => navigate("/profile")}

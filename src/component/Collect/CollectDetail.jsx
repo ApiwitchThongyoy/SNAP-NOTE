@@ -9,6 +9,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import AdCarousel from "../Ads/AdsDetail";
+import NotificationBell from "../NotificationBell/NotificationBell";
+
 
 export default function Collect_Detail() {
   const navigate = useNavigate();
@@ -352,7 +354,7 @@ export default function Collect_Detail() {
             </>
           ) : (
             <p className="text-gray-300 mt-20 text-center">
-              🔍 กรุณาเลือกเพลย์ลิสต์ด้านบนเพื่อดูโพสต์ที่บันทึกไว้
+               กรุณาเลือกเพลย์ลิสต์ด้านบนเพื่อดูโพสต์ที่บันทึกไว้
             </p>
           )}
         </div>
