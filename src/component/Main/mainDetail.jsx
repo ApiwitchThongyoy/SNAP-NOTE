@@ -271,7 +271,7 @@ export default function MainDetail() {
           />
         </div>
         <div className="flex gap-10 text-3xl mr-25 cursor-pointer">
-          {user ? <NotificationBell userId={user.id} /> : <BsBell size={24} className="text-gray-500" />}
+          {user ? <NotificationBell userId={user.id} /> : <BsBell size={24} className="text-gray-500 " />}
           <button onClick={() => navigate("/profile")}>
             <BsPersonCircle />
           </button>
@@ -283,17 +283,17 @@ export default function MainDetail() {
         {/* Sidebar */}
         <div className="w-1/5 bg-[#434343] flex flex-col justify-between p-6 rounded-xl sticky top-4 max-h-[calc(95.7vh-6rem)]">
           <div className="flex flex-col gap-6">
-            <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2">
+            <button onClick={() => navigate("/main-page")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">
               หน้าหลัก
             </button>
-            <button onClick={() => navigate("/crate-post")} className="hover:bg-green-400 text-black rounded-3xl p-2">
+            <button onClick={() => navigate("/crate-post")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">
               โพสต์
             </button>
-            <button onClick={() => navigate("/collect-post")} className="hover:bg-green-400 text-black rounded-3xl p-2">
+            <button onClick={() => navigate("/collect-post")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">
               บันทึก
             </button>
           </div>
-          <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2">
+          <button onClick={() => navigate("/setting")} className="hover:bg-green-400 text-black rounded-3xl p-2 cursor-pointer">
             ตั้งค่า
           </button>
         </div>
@@ -343,7 +343,7 @@ export default function MainDetail() {
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => toggleLike(post.id)}
-                    className={`flex items-center gap-2 px-3 py-1 rounded ${
+                    className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
                       likes.includes(post.id) ? "bg-red-500 text-white" : "bg-gray-200 text-black"
                     }`}
                   >
@@ -352,7 +352,7 @@ export default function MainDetail() {
 
                   <button
                     onClick={() => openSaveModal(post.id)}
-                    className={`flex items-center gap-2 px-3 py-1 rounded ${
+                    className={`flex items-center gap-2 px-3 py-1 rounded cursor-pointer ${
                       savedPosts.includes(post.id) ? "bg-green-500 text-white" : "bg-gray-200 text-black"
                     }`}
                   >
