@@ -32,7 +32,7 @@ export default function NotificationBell({ userId }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl border">
+        <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl border z-50">
           <ul className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
               <li className="p-3 text-sm text-black text-center">
@@ -42,13 +42,13 @@ export default function NotificationBell({ userId }) {
               notifications.map((noti, i) => (
                 <li
                   key={i}
-                  className={`p-3 text-sm border-b ${
-                    noti.is_read ? "bg-white" : "bg-gray-100 font-semibold"
+                  className={`p-3 text-sm border-b text-black ${
+                    noti.is_read ? "bg-black" : "bg-gray-100 font-semibold"
                   }`}
                 >
                   {noti.message}
                   <br />
-                  <span className="text-xs text-black">
+                  <span className="text-xs text-gray-400">
                     {new Date(noti.created_at).toLocaleString()}
                   </span>
                 </li>
